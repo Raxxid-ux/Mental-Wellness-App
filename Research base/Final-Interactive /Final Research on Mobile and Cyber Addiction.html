@@ -1,1 +1,2934 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-text-size="medium">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Designing Calm Futures — Mobile & Cyber Addiction Research</title>
+  <!-- Optional Google Fonts (Outfit + Inter) with clean system fallbacks -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
 
+  <style>
+    :root {
+      /* Typography: adopted working pairing from DESIGN.md */
+      --font-display: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+      /* Core palette from DESIGN.md */
+      --color-background: #EDF0F5;
+      --color-header: #F8F9FB;
+      --color-surface: #F9FAFC;
+      --color-surface-hover: #F1F4F9;
+      --color-border: #D9DDE3;
+      --color-text: #1F2430;
+      --color-wordmark: #3A3F4F;
+      --color-text-muted: #5F6573;
+      --color-primary: #1A6EF0;
+      --color-primary-hover: #1558C0;
+      --color-success: #5CC83A;
+      --color-success-bg: #EBF9E6;
+      --color-success-text: #1F4E10;
+
+      /* Signature gradient (used with restraint) */
+      --brand-blue: #2BA8F0;
+      --brand-teal: #22D08B;
+      --brand-lime: #7FDB22;
+      --brand-gradient: linear-gradient(90deg, #2BA8F0 0%, #22D08B 50%, #7FDB22 100%);
+
+      /* Semantic chips from DESIGN.md */
+      --chip-experience-bg: #A8C7FA;
+      --chip-experience-text: #1F2A44;
+      --chip-skill-bg: #B5F55A;
+      --chip-skill-text: #2B3A10;
+      --chip-neutral-bg: #E3E6EC;
+      --chip-neutral-text: #4A4F5C;
+      --chip-warm-bg: #FDE8C8;
+      --chip-warm-text: #5C3B09;
+      --button-disabled-bg: #B9D0FA;
+
+      /* Shape language from DESIGN.md */
+      --radius-button: 12px;
+      --radius-input: 10px;
+      --radius-card: 24px;
+      --radius-panel: 28px;
+      --radius-chip: 999px;
+      --radius-tag: 8px;
+
+      /* Spacing system (8px base grid) */
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 24px;
+      --space-6: 32px;
+      --space-7: 48px;
+      --space-8: 64px;
+      --space-9: 80px;
+
+      /* Elevation tokens */
+      --shadow-none: none;
+      --shadow-subtle: 0 2px 8px rgba(31, 36, 48, 0.04);
+      --shadow-card: 0 6px 20px rgba(31, 36, 48, 0.06);
+      --shadow-overlay: 0 12px 32px rgba(31, 36, 48, 0.10);
+
+      /* Motion tokens */
+      --motion-fast: 150ms;
+      --motion-standard: 250ms;
+      --motion-reveal: 400ms;
+      --ease-out-calm: cubic-bezier(0.22, 1, 0.36, 1);
+
+      /* Dynamic text scale multiplier */
+      --font-scale: 1;
+    }
+
+    [data-theme="dark"] {
+      --color-background: #12151C;
+      --color-header: #181C26;
+      --color-surface: #1D222E;
+      --color-surface-hover: #252B3B;
+      --color-border: #2E3646;
+      --color-text: #F0F3F8;
+      --color-wordmark: #D5DCE6;
+      --color-text-muted: #9BA3B4;
+      --color-primary: #3B82F6;
+      --color-primary-hover: #60A5FA;
+      --color-success: #5CC83A;
+      --color-success-bg: #1B3316;
+      --color-success-text: #A5F08E;
+
+      --chip-experience-bg: #1E3A6D;
+      --chip-experience-text: #C7DCFF;
+      --chip-skill-bg: #243B0E;
+      --chip-skill-text: #C8F97E;
+      --chip-neutral-bg: #2A3140;
+      --chip-neutral-text: #CFD6E4;
+      --chip-warm-bg: #3D2A10;
+      --chip-warm-text: #FAD6A0;
+
+      --shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.25);
+      --shadow-card: 0 6px 20px rgba(0, 0, 0, 0.35);
+    }
+
+    [data-text-size="small"] { --font-scale: 0.92; }
+    [data-text-size="medium"] { --font-scale: 1; }
+    [data-text-size="large"] { --font-scale: 1.12; }
+    [data-text-size="xlarge"] { --font-scale: 1.24; }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--color-background);
+      color: var(--color-text);
+      font-family: var(--font-body);
+      font-size: calc(17px * var(--font-scale));
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      transition: background-color var(--motion-standard) ease, color var(--motion-standard) ease;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: var(--font-display);
+      color: var(--color-text);
+      margin-top: 0;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+    }
+
+    h1 {
+      font-size: calc(34px * var(--font-scale));
+      line-height: 1.18;
+      font-weight: 400;
+    }
+
+    h2 {
+      font-size: calc(24px * var(--font-scale));
+      line-height: 1.25;
+    }
+
+    h3 {
+      font-size: calc(19px * var(--font-scale));
+      line-height: 1.35;
+    }
+
+    p {
+      margin-top: 0;
+      margin-bottom: var(--space-4);
+      max-width: 66ch;
+    }
+
+    a {
+      color: var(--color-primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Keyboard focus state */
+    :focus-visible {
+      outline: 3px solid var(--color-primary);
+      outline-offset: 3px;
+    }
+
+    /* Skip to content link for screen readers / keyboard users */
+    .skip-link {
+      position: absolute;
+      top: -60px;
+      left: var(--space-4);
+      background: var(--color-primary);
+      color: #fff;
+      padding: var(--space-2) var(--space-4);
+      border-radius: var(--radius-button);
+      z-index: 1000;
+      font-weight: 500;
+    }
+    .skip-link:focus {
+      top: var(--space-3);
+    }
+
+    /* Header & Progress Bar */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: var(--color-header);
+      border-bottom: 1px solid var(--color-border);
+      transition: background-color var(--motion-standard) ease;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 5px;
+      background-color: var(--color-border);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--brand-gradient);
+      width: 0%;
+      transition: width var(--motion-reveal) ease;
+    }
+
+    .header-inner {
+      max-width: 840px;
+      margin: 0 auto;
+      padding: var(--space-3) var(--space-4);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+    }
+
+    .brand-block {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: var(--space-1) var(--space-2);
+      border-radius: var(--radius-button);
+      text-align: left;
+      color: inherit;
+    }
+
+    .brand-block:hover {
+      background-color: var(--color-surface-hover);
+    }
+
+    .brand-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--brand-gradient);
+      flex-shrink: 0;
+    }
+
+    .brand-title {
+      font-family: var(--font-display);
+      font-size: calc(16px * var(--font-scale));
+      font-weight: 500;
+      color: var(--color-wordmark);
+      display: block;
+    }
+
+    .brand-subtitle {
+      font-size: calc(12px * var(--font-scale));
+      color: var(--color-text-muted);
+      display: block;
+    }
+
+    .nav-controls {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+    }
+
+    .btn {
+      font-family: var(--font-body);
+      font-size: calc(14px * var(--font-scale));
+      font-weight: 500;
+      line-height: 1.3;
+      padding: 10px 16px;
+      border-radius: var(--radius-button);
+      border: 1px solid var(--color-border);
+      background-color: var(--color-surface);
+      color: var(--color-text);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      transition: background-color var(--motion-fast) ease, border-color var(--motion-fast) ease, transform var(--motion-fast) ease;
+    }
+
+    .btn:hover:not(:disabled) {
+      background-color: var(--color-surface-hover);
+    }
+
+    .btn:active:not(:disabled) {
+      transform: translateY(1px);
+    }
+
+    .btn:disabled {
+      background-color: var(--button-disabled-bg);
+      color: rgba(255, 255, 255, 0.85);
+      border-color: transparent;
+      cursor: not-allowed;
+      opacity: 0.65;
+    }
+
+    .btn-primary {
+      background-color: var(--color-primary);
+      color: #ffffff;
+      border-color: var(--color-primary);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background-color: var(--color-primary-hover);
+      border-color: var(--color-primary-hover);
+    }
+
+    .btn-success {
+      background-color: var(--color-success-bg);
+      color: var(--color-success-text);
+      border-color: var(--color-success);
+    }
+
+    .btn-icon {
+      padding: 8px 12px;
+      font-size: calc(13px * var(--font-scale));
+    }
+
+    .btn-active {
+      border-color: var(--color-primary);
+      background-color: var(--chip-experience-bg);
+      color: var(--chip-experience-text);
+    }
+
+    /* Main Container */
+    .main-container {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: var(--space-6) var(--space-4) var(--space-9);
+    }
+
+    /* Toolbar for search and view controls */
+    .utility-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-5);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-card);
+      padding: var(--space-3) var(--space-4);
+      box-shadow: var(--shadow-subtle);
+      transition: opacity var(--motion-standard) ease, transform var(--motion-standard) var(--ease-out-calm), box-shadow var(--motion-standard) ease;
+    }
+
+    .card-interactive:hover {
+      box-shadow: var(--shadow-card);
+    }
+
+    /* Smooth Staggered View Reveal Animation */
+    @keyframes calmRevealUp {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-in {
+      animation: calmRevealUp var(--motion-reveal) var(--ease-out-calm) both;
+    }
+
+    /* Interactive Breathing Pacer & Neuroplasticity Widgets */
+    .interactive-widget {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-card);
+      padding: var(--space-5);
+      margin-bottom: var(--space-5);
+      box-shadow: var(--shadow-subtle);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .widget-accent-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--brand-gradient);
+    }
+
+    .stage-tabs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: var(--space-2);
+      margin: var(--space-4) 0;
+    }
+
+    .stage-tab {
+      padding: var(--space-3);
+      border-radius: var(--radius-button);
+      border: 1px solid var(--color-border);
+      background: var(--color-background);
+      color: var(--color-text);
+      font-family: var(--font-body);
+      font-size: calc(13.5px * var(--font-scale));
+      font-weight: 500;
+      cursor: pointer;
+      text-align: left;
+      transition: all var(--motion-fast) var(--ease-out-calm);
+    }
+
+    .stage-tab:hover {
+      background: var(--color-surface-hover);
+      transform: translateY(-1px);
+    }
+
+    .stage-tab.active {
+      border-color: var(--color-primary);
+      background: var(--chip-experience-bg);
+      color: var(--chip-experience-text);
+    }
+
+    .meter-row {
+      margin-bottom: var(--space-3);
+    }
+
+    .meter-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: calc(13px * var(--font-scale));
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+
+    .meter-track {
+      height: 10px;
+      border-radius: var(--radius-chip);
+      background: var(--color-background);
+      border: 1px solid var(--color-border);
+      overflow: hidden;
+    }
+
+    .meter-fill {
+      height: 100%;
+      border-radius: var(--radius-chip);
+      transition: width 600ms var(--ease-out-calm);
+    }
+
+    /* Breathing Pacer Orb */
+    .breath-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-5) var(--space-3);
+      text-align: center;
+    }
+
+    .breath-orb-wrap {
+      position: relative;
+      width: 136px;
+      height: 136px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: var(--space-3) 0 var(--space-4);
+    }
+
+    .breath-orb {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      background: var(--brand-gradient);
+      opacity: 0.85;
+      transform: scale(1);
+      transition: transform 1.8s ease-in-out, opacity 0.6s ease;
+      box-shadow: 0 8px 28px rgba(43, 168, 240, 0.22);
+    }
+
+    .breath-orb.inhale-1 {
+      transform: scale(1.38);
+      transition-duration: 1.6s;
+    }
+
+    .breath-orb.inhale-2 {
+      transform: scale(1.58);
+      transition-duration: 0.9s;
+    }
+
+    .breath-orb.exhale {
+      transform: scale(0.92);
+      transition-duration: 3.6s;
+    }
+
+    /* Chips & Evidence Tags */
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin-bottom: var(--space-3);
+      align-items: center;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: var(--radius-chip);
+      font-size: calc(12px * var(--font-scale));
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .tag-small {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: var(--radius-tag);
+      font-size: calc(11.5px * var(--font-scale));
+      font-weight: 500;
+      line-height: 1.35;
+    }
+
+    /* Evidence & Provenance Colors from DESIGN.md */
+    .chip-strong {
+      background-color: var(--chip-skill-bg);
+      color: var(--chip-skill-text);
+    }
+
+    .chip-moderate {
+      background-color: var(--chip-experience-bg);
+      color: var(--chip-experience-text);
+    }
+
+    .chip-experience {
+      background-color: var(--chip-warm-bg);
+      color: var(--chip-warm-text);
+    }
+
+    .chip-weak {
+      background-color: var(--chip-neutral-bg);
+      color: var(--chip-neutral-text);
+    }
+
+    .tag-docs {
+      background-color: var(--chip-experience-bg);
+      color: var(--chip-experience-text);
+    }
+
+    .tag-external {
+      background-color: var(--chip-skill-bg);
+      color: var(--chip-skill-text);
+    }
+
+    .tag-both {
+      background-color: var(--chip-neutral-bg);
+      color: var(--chip-neutral-text);
+    }
+
+    .summary-box {
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-left: 4px solid var(--color-primary);
+      border-radius: var(--radius-card);
+      padding: var(--space-5);
+      margin-bottom: var(--space-5);
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .summary-label {
+      font-size: calc(12px * var(--font-scale));
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-primary);
+      font-weight: 600;
+      margin-bottom: var(--space-2);
+      display: block;
+    }
+
+    .summary-list {
+      margin: 0;
+      padding-left: var(--space-4);
+    }
+
+    .summary-list li {
+      margin-bottom: var(--space-2);
+      color: var(--color-text);
+    }
+    .summary-list li:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Collapsible Detail Cards */
+    .collapse-card {
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-card);
+      margin-bottom: var(--space-4);
+      overflow: hidden;
+      box-shadow: var(--shadow-subtle);
+      transition: opacity var(--motion-standard) ease, border-color var(--motion-fast) ease;
+    }
+
+    .collapse-header {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: var(--space-4) var(--space-5);
+      text-align: left;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      cursor: pointer;
+      color: var(--color-text);
+      font-family: var(--font-display);
+      font-size: calc(19px * var(--font-scale));
+      font-weight: 500;
+    }
+
+    .collapse-header:hover {
+      background-color: var(--color-surface-hover);
+    }
+
+    .collapse-meta {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      flex-shrink: 0;
+    }
+
+    .collapse-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background-color: var(--color-background);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: var(--color-text-muted);
+      transition: transform var(--motion-fast) ease;
+    }
+
+    .collapse-card[data-open="true"] .collapse-icon {
+      transform: rotate(180deg);
+      background-color: var(--chip-experience-bg);
+      color: var(--chip-experience-text);
+    }
+
+    .collapse-body {
+      display: none;
+      padding: 0 var(--space-5) var(--space-5);
+      border-top: 1px solid var(--color-border);
+    }
+
+    .collapse-card[data-open="true"] .collapse-body {
+      display: block;
+      padding-top: var(--space-4);
+      animation: calmRevealUp 260ms var(--ease-out-calm) both;
+    }
+
+    /* Claim Item inside Collapsible Card */
+    .claim-item {
+      padding: var(--space-4);
+      background-color: var(--color-background);
+      border-radius: 16px;
+      margin-bottom: var(--space-3);
+      border: 1px solid var(--color-border);
+      transition: transform var(--motion-fast) var(--ease-out-calm), border-color var(--motion-fast) ease;
+    }
+
+    .claim-item:hover {
+      border-color: var(--color-primary);
+    }
+
+    .claim-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .claim-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+      margin-bottom: var(--space-2);
+    }
+
+    .claim-title {
+      font-family: var(--font-display);
+      font-weight: 500;
+      font-size: calc(16px * var(--font-scale));
+      color: var(--color-text);
+      margin: 0;
+    }
+
+    .claim-text {
+      margin: 0;
+      font-size: calc(15.5px * var(--font-scale));
+      color: var(--color-text);
+    }
+
+    /* Two-column Takeaways & App Meaning Grid */
+    .insight-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-4);
+      margin-top: var(--space-5);
+      margin-bottom: var(--space-5);
+    }
+
+    @media (min-width: 680px) {
+      .insight-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .insight-box {
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-card);
+      padding: var(--space-5);
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .insight-box ul {
+      margin: 0;
+      padding-left: var(--space-4);
+    }
+
+    .insight-box li {
+      margin-bottom: var(--space-2);
+    }
+
+    /* Focus Mode Styling: dims everything except the focused block */
+    body.focus-mode-active .site-header,
+    body.focus-mode-active .utility-bar,
+    body.focus-mode-active .section-top-meta,
+    body.focus-mode-active .focus-dimmable {
+      opacity: 0.22;
+      transition: opacity var(--motion-standard) ease;
+    }
+
+    body.focus-mode-active .site-header:hover,
+    body.focus-mode-active .utility-bar:hover,
+    body.focus-mode-active .focus-dimmable:hover,
+    body.focus-mode-active .focus-dimmable:focus-within,
+    body.focus-mode-active .focus-dimmable.active-focus-target {
+      opacity: 1;
+    }
+
+    /* Reflection & Quiz Box */
+    .reflection-card {
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-card);
+      padding: var(--space-5);
+      margin-top: var(--space-5);
+      margin-bottom: var(--space-5);
+    }
+
+    .quiz-option {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: var(--space-3) var(--space-4);
+      margin-bottom: var(--space-2);
+      border-radius: var(--radius-button);
+      border: 1px solid var(--color-border);
+      background-color: var(--color-background);
+      color: var(--color-text);
+      font-family: var(--font-body);
+      font-size: calc(15px * var(--font-scale));
+      cursor: pointer;
+      transition: background-color var(--motion-fast) ease, border-color var(--motion-fast) ease;
+    }
+
+    .quiz-option:hover {
+      background-color: var(--color-surface-hover);
+    }
+
+    .quiz-option.selected-correct {
+      background-color: var(--color-success-bg);
+      border-color: var(--color-success);
+      color: var(--color-success-text);
+      font-weight: 500;
+    }
+
+    .quiz-option.selected-gentle {
+      background-color: var(--chip-experience-bg);
+      border-color: var(--color-primary);
+      color: var(--chip-experience-text);
+    }
+
+    .quiz-feedback {
+      font-size: calc(14px * var(--font-scale));
+      padding: var(--space-3);
+      border-radius: var(--radius-input);
+      background-color: var(--color-background);
+      margin-top: var(--space-2);
+      margin-bottom: var(--space-4);
+      display: none;
+    }
+
+    .notes-textarea {
+      width: 100%;
+      min-height: 96px;
+      padding: var(--space-3);
+      border-radius: var(--radius-input);
+      border: 1px solid var(--color-border);
+      background-color: var(--color-background);
+      color: var(--color-text);
+      font-family: var(--font-body);
+      font-size: calc(15px * var(--font-scale));
+      resize: vertical;
+      margin-top: var(--space-2);
+    }
+
+    /* Section Grid on Home View */
+    .section-list-item {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: var(--space-3);
+      padding: var(--space-5);
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-card);
+      margin-bottom: var(--space-4);
+      box-shadow: var(--shadow-subtle);
+      cursor: pointer;
+      text-align: left;
+      width: 100%;
+      transition: transform var(--motion-standard) var(--ease-out-calm), box-shadow var(--motion-standard) ease, border-color var(--motion-fast) ease;
+    }
+
+    .section-list-item:hover {
+      box-shadow: var(--shadow-card);
+      border-color: var(--color-primary);
+      transform: translateY(-2px);
+    }
+
+    /* Privacy Notice Banner */
+    .privacy-banner {
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-card);
+      padding: var(--space-4) var(--space-5);
+      margin-bottom: var(--space-5);
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-3);
+      font-size: calc(14.5px * var(--font-scale));
+      color: var(--color-text-muted);
+    }
+
+    /* Bottom Navigation Footer */
+    .section-footer-nav {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      margin-top: var(--space-6);
+      padding-top: var(--space-5);
+      border-top: 1px solid var(--color-border);
+    }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to reading area</a>
+
+  <header class="site-header" role="banner">
+    <div class="progress-track" aria-hidden="true">
+      <div id="top-progress-fill" class="progress-fill"></div>
+    </div>
+    <div class="header-inner">
+      <button class="brand-block" id="btn-home-brand" aria-label="Go to Home screen">
+        <span class="brand-dot" aria-hidden="true"></span>
+        <span>
+          <span class="brand-title">Final Research on Mobile &amp; Cyber Addiction</span>
+          <span class="brand-subtitle">Hamza Rashid K</span>
+        </span>
+      </button>
+
+      <nav class="nav-controls" aria-label="Primary navigation and reading settings">
+        <button class="btn btn-icon" id="nav-home" type="button">Home</button>
+        <button class="btn btn-icon" id="nav-bookmarks" type="button">
+          Saved &amp; Notes <span id="bookmark-count-badge" class="tag-small chip-weak">0</span>
+        </button>
+        <button class="btn btn-icon" id="nav-sources" type="button">Sources</button>
+        <button class="btn btn-icon" id="btn-focus-mode" type="button" aria-pressed="false" title="Dim everything except the card you are reading">
+          Focus Mode: Off
+        </button>
+        <button class="btn btn-icon" id="btn-text-size" type="button" title="Cycle text size">
+          Text: M
+        </button>
+        <button class="btn btn-icon" id="btn-theme" type="button" title="Toggle light or dark mode">
+          Dark Mode
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content" class="main-container" tabindex="-1">
+    <div class="utility-bar" role="region" aria-label="Search and progress status">
+      <div class="search-wrapper">
+        <input
+          type="search"
+          id="search-input"
+          class="search-input"
+          placeholder="Search claims, brain science, DPDP privacy, or personas..."
+          aria-label="Search across all research sections"
+        />
+        <button type="button" id="search-clear" class="search-clear" aria-label="Clear search" style="display:none;">✕</button>
+      </div>
+      <div class="progress-pill" id="progress-status-text" aria-live="polite">
+        0 of 7 sections done
+      </div>
+    </div>
+
+    <!-- Dynamic View Output -->
+    <div id="app-view"></div>
+  </main>
+
+  <script>
+    /**
+     * ============================================================================
+     * 1. MASTER RESEARCH CONTENT DATA (Edit text right here without touching logic)
+     * ============================================================================
+     * Privacy Note: All real people's names from the research notes have been
+     * changed to pseudonyms (Aarav, Maya, Diya, Kabir, and Rohan) to protect
+     * participant privacy.
+     */
+    const PRIVACY_NOTE = "Privacy note: To protect real people's privacy, all personal names from the original field notes have been changed to pseudonyms (Maya, Diya, Kabir, Rohan, and Aarav). Their behavioral patterns and research findings remain 100% faithful to the study.";
+
+    const NEURO_STAGES = [
+      {
+        stage: "Stage 1: Days 1–7",
+        title: "Fragile Conscious Willpower",
+        effort: 95,
+        habit: 10,
+        summary: "The prefrontal cortex works overtime to resist urges while dopamine expectations are still uncalibrated. Willpower alone fails without external app-open friction."
+      },
+      {
+        stage: "Stage 2: Weeks 2–4",
+        title: "Dopamine Baseline Reset",
+        effort: 70,
+        habit: 30,
+        summary: "Acute restlessness begins to settle as natural dopamine receptor sensitivity recovers. Low-stimulus offline moments ('soft fascination') start feeling rewarding again."
+      },
+      {
+        stage: "Stage 3: Months 1–3",
+        title: "Basal Ganglia Habit Shift",
+        effort: 40,
+        habit: 65,
+        summary: "Control gradually shifts from tired prefrontal willpower into automated motor routines in the basal ganglia. Pausing becomes a low-effort default."
+      },
+      {
+        stage: "Stage 4: Months 3+",
+        title: "Calm Identity Integration",
+        effort: 15,
+        habit: 90,
+        summary: "The phone returns to being an intentional tool rather than an emotional escape. If severe stress triggers a slip, re-stabilizing is 3–4x faster than Stage 1."
+      }
+    ];
+
+    const REPORT_DATA = [
+      {
+        id: "section-0",
+        number: "Section 0",
+        title: "Start Here — The Big Picture & Validation Plan",
+        readTime: "4 min read",
+        subtitle: "Why willpower fails against phone addiction, and how the product intervenes instead.",
+        threeLineSummary: [
+          "Compulsive phone use isn't a lack of discipline—it's what happens when ancient human survival circuits meet apps designed like slot machines.",
+          "Knowing we scroll too much doesn't stop the habit, because the fast, automatic part of the brain unlocks the phone milliseconds before the logical mind wakes up.",
+          "An effective companion shouldn't scold people or use streaks; it needs to catch the urge right when an app opens, act as a calm mirror, and offer a 2-minute grounding activity."
+        ],
+        cards: [
+          {
+            id: "s0-c1",
+            title: "Why Traditional Screen-Time Blockers Fail",
+            summary: "Why timers, streaks, and hard locks end up deleted within a week.",
+            claims: [
+              {
+                id: "s0-cl1",
+                title: "The Neurological Timing Gap",
+                evidence: "Strong",
+                provenance: "Both",
+                text: "When someone reaches for their phone during boredom, career anxiety, or loneliness, the brain's automatic habit center (the basal ganglia) unlocks the screen milliseconds before the slower, logical prefrontal cortex can weigh the consequences."
+              },
+              {
+                id: "s0-cl2",
+                title: "The Guilt & Rebound Loop",
+                evidence: "Strong",
+                provenance: "Project docs",
+                text: "Hard app blockers, screen-time trackers, and streak counters demand willpower right when a user is already exhausted. When they inevitably slip up, these tools trigger guilt and shame, leading to rebound scrolling binges."
+              },
+              {
+                id: "s0-cl3",
+                title: "Success Means Needing the App Less",
+                evidence: "Moderate",
+                provenance: "Project docs",
+                text: "An effective companion must step in at the exact moment an addictive app opens, offer a 2-minute emotional grounding bridge to fill the emptiness, and measure ultimate success by how little the user needs the companion over time."
+              }
+            ]
+          },
+          {
+            id: "s0-c2",
+            title: "5 Core Takeaways from the Research",
+            summary: "The five strongest truths across neuroscience, mobile OS rules, and Indian privacy law.",
+            claims: [
+              {
+                id: "s0-cl4",
+                title: "Takeaway 1: One Shared Root Cause",
+                evidence: "Strong",
+                provenance: "Both",
+                text: "Focus loss, loneliness, social comparison, chronic disorganization, and escapism share one root mechanism: using an unpredictable reward device to numb uncomfortable feelings while seeking unmet needs for choice, capability, and connection."
+              },
+              {
+                id: "s0-cl5",
+                title: "Takeaway 2: Automatic Mind Beats Willpower",
+                evidence: "Strong",
+                provenance: "Project docs",
+                text: "Compulsive checking is run by automatic habit circuits (System 1 / basal ganglia), while logical self-control (System 2 / prefrontal cortex) is weakened by stress or fatigue."
+              },
+              {
+                id: "s0-cl6",
+                title: "Takeaway 3: Mobile OS Blocks Mid-Scroll Popups",
+                evidence: "Strong",
+                provenance: "Both",
+                text: "Modern Android and iOS systems sandbox apps so third-party tools cannot read inside social feeds like Instagram. Interception must happen right when the app opens or via time-quota triggers."
+              },
+              {
+                id: "s0-cl7",
+                title: "Takeaway 4: Friction Needs a Bridge Activity",
+                evidence: "Strong",
+                provenance: "Both",
+                text: "A static 10-second delay stops impulsive opening on day one, but the brain adapts to it by day ten. The pause must lead directly into a brief, low-effort grounding activity that soothes the emotional trigger."
+              },
+              {
+                id: "s0-cl8",
+                title: "Takeaway 5: Local-First Storage Solves Privacy",
+                evidence: "Strong",
+                provenance: "Both",
+                text: "Logging vulnerable feelings creates strict legal liability under India's Digital Personal Data Protection (DPDP) Act and risks exposure on shared family phones. Storing all data locally on the phone removes cloud risk."
+              }
+            ]
+          },
+          {
+            id: "s0-c3",
+            title: "Immediate Validation Steps",
+            summary: "Three practical UX validation steps before building high-fidelity screens.",
+            claims: [
+              {
+                id: "s0-cl9",
+                title: "Step 1: Two 30-Minute User Validation Conversations",
+                evidence: "Observational",
+                provenance: "Project docs",
+                text: "Conduct structured, non-clinical conversations with representative users behind our primary personas (Maya and Diya) to verify whether they prefer a pause at app-open or emotional grounding during overwhelm."
+              },
+              {
+                id: "s0-cl10",
+                title: "Step 2: Paper-Prototype the 5-Step MVP Loop",
+                evidence: "Moderate",
+                provenance: "Project docs",
+                text: "Sketch and test the single core journey (Urge → Pause Prompt → Awareness → 2-Minute Bridge → Exit/Bypass) on paper before investing in complex visual animations."
+              },
+              {
+                id: "s0-cl11",
+                title: "Step 3: Test the 7 Microcopy Prompts for Annoyance",
+                evidence: "Moderate",
+                provenance: "Both",
+                text: "Show the drafted pause prompts to five target users (ages 18–26) during real phone unlocks to check if the tone feels supportive or triggers defensive annoyance."
+              }
+            ]
+          }
+        ],
+        takeaways: [
+          "Awareness of a phone habit does not give a person control over it in the moment of fatigue.",
+          "Mobile OS rules mean interception must happen at app launch, not mid-scroll.",
+          "Every pause must be paired with a 2-minute emotional grounding bridge."
+        ],
+        appMeaning: [
+          "Keep the product focused on one calm 5-step loop from urge to offline return.",
+          "Store all emotional and usage logs 100% locally on the user's device.",
+          "Validate paper sketches and microcopy with real users before polishing final screens."
+        ],
+        reflections: [
+          {
+            q: "Why do static 10-second delays stop working after about ten days?",
+            options: [
+              "Because the brain adapts to predictable delays unless they connect to a grounding activity.",
+              "Because phones automatically disable timers after ten days."
+            ],
+            correctIndex: 0,
+            explanation: "Spot on. Field trials show our brains quickly tune out a repetitive countdown unless the pause varies and helps soothe the restlessness underneath."
+          },
+          {
+            q: "Where must the companion step in, given Android and iOS security rules?",
+            options: [
+              "Right when an addictive app is opened (or when a time quota hits).",
+              "By reading the exact posts inside an Instagram scroll."
+            ],
+            correctIndex: 0,
+            explanation: "Exactly. Operating systems block apps from peeking inside other apps' feeds, so app-open boundaries are the ideal trigger point."
+          }
+        ],
+        notePrompt: "Add any team notes or validation thoughts for Section 0:"
+      },
+      {
+        id: "section-1",
+        number: "Section 1",
+        title: "Users, Segments & Lived Realities",
+        readTime: "5 min read",
+        subtitle: "Who we are building for (ages 18–26), why screens become an emotional shelter, and anonymization standards.",
+        threeLineSummary: [
+          "Young adults aged 18 to 26 aren't just chasing entertainment—they use their phones as an emotional shelter to numb stress, career fear, and loneliness.",
+          "While our primary personas (Maya, Diya, and Aarav) come from field observation, their struggles are backed by peer-reviewed studies of over 40,000 youth.",
+          "Because users deal with ADHD working-memory limits, heavy guilt, and shared budget Android phones in India, every screen must be simple, offline-ready, and private."
+        ],
+        cards: [
+          {
+            id: "s1-c1",
+            title: "Experiential Avoidance & The Science of Escapism",
+            summary: "Why sitting in the same room on separate screens is usually about escaping uncomfortable feelings.",
+            claims: [
+              {
+                id: "s1-cl1",
+                title: "Phones as Emotional Shelter (Experiential Avoidance)",
+                evidence: "Strong",
+                provenance: "Project docs",
+                text: "Heavy screen use typically begins as experiential avoidance—using an activity to escape or numb unpleasant internal feelings like loneliness, career uncertainty, boredom, or social anxiety when offline life feels harsh."
+              },
+              {
+                id: "s1-cl2",
+                title: "40,000-Youth Meta-Analysis on Mood & Sleep",
+                evidence: "Strong",
+                provenance: "Project docs",
+                text: "A meta-analysis of over 40,000 young people shows problematic smartphone use is linked to a 3x higher risk of depression and anxiety, and 68.7% of addicted students suffer poor sleep quality (compared to 57.1% of non-addicted peers)."
+              },
+              {
+                id: "s1-cl3",
+                title: "ADHD & Lower Baseline Dopamine",
+                evidence: "Strong",
+                provenance: "Project docs",
+                text: "Individuals with ADHD have lower baseline dopamine activity and lower boredom tolerance, making fast-paced, unpredictable digital feeds neurologically hard to resist."
+              }
+            ]
+          },
+          {
+            id: "s1-c2",
+            title: "Primary Personas (Anonymized Field Profiles)",
+            summary: "Meet Maya, Diya, and Aarav—the real-world observations guiding user empathy.",
+            claims: [
+              {
+                id: "s1-cl4",
+                title: "Maya (Age 20 — Primary Persona)",
+                evidence: "Observational",
+                provenance: "Project docs",
+                text: "Manages ADHD, OCD, anxiety, and unemployment. She relies on online friendships because offline talking feels exhausting. UX Need: High risk of forgetting the app exists due to ADHD working memory limits; needs ultra-short interactions and zero-shame re-entry."
+              },
+              {
+                id: "s1-cl5",
+                title: "Diya (Age 26 — Primary Persona)",
+                evidence: "Observational",
+                provenance: "Project docs",
+                text: "Copes with PTSD, anxiety, and physical isolation; spends all day in her room binging drama series and feels safer with online friends. UX Need: Yanking screen access away abruptly can trigger panic; she needs gentle grounding bridges."
+              },
+              {
+                id: "s1-cl6",
+                title: "Aarav (Age 22 — Burned-Out Creative Graduate)",
+                evidence: "Observational",
+                provenance: "Project docs",
+                text: "Faces post-graduation career uncertainty and short-term memory strain. Escapes harsh reality into social media and struggles to finish long projects. UX Need: High guilt after scrolling; needs a calm 'Focus Anchor' reminder without a heavy task manager."
+              }
+            ]
+          },
+          {
+            id: "s1-c3",
+            title: "5 Behavioral Archetypes in Everyday Screen Use",
+            summary: "Patterns backed by behavioral literature, including Kabir and Rohan.",
+            claims: [
+              {
+                id: "s1-cl7",
+                title: "The Doomscroller & The Compulsive Checker",
+                evidence: "Strong",
+                provenance: "Project docs",
+                text: "The Doomscroller reads distressing news to feel an illusion of control over threats, needing cognitive closure to stop. The Compulsive Checker unlocks the phone dozens of times an hour on autopilot to resolve the uncertainty of unread messages."
+              },
+              {
+                id: "s1-cl8",
+                title: "The Avoidance-Driven User (e.g., Kabir, Age 19)",
+                evidence: "Moderate",
+                provenance: "Project docs",
+                text: "Switches to mobile games (like Free Fire) or Reels the exact second a study or career task triggers self-doubt. Needs tiny micro-actions to lower the barrier of starting hard work."
+              },
+              {
+                id: "s1-cl9",
+                title: "The Validation Seeker (e.g., Rohan, Age 20) & Multitasking Fragmenter",
+                evidence: "Strong",
+                provenance: "Project docs",
+                text: "Rohan monitors likes and messages as proof of personal worth—meaning the wellness app must never use public leaderboards or social comparison. Meanwhile, the Multitasking Fragmenter splits attention across tabs all day and needs single-focus screens."
+              }
+            ]
+          }
+        ],
+        takeaways: [
+          "Separate observational persona insights (Maya, Diya, Aarav) from peer-reviewed science—both are valuable when labeled clearly.",
+          "Working memory can only hold 4 to 7 items at once, and ADHD or burnout shrinks that buffer even further.",
+          "Budget Android phones in India have aggressive battery killers, spotty internet, and are sometimes shared with family."
+        ],
+        appMeaning: [
+          "Show only one clear question or action per screen.",
+          "Never use leaderboards, comparative stats, or guilt-inducing counters.",
+          "Keep lock-screen notifications neutral so shared family phones stay private."
+        ],
+        reflections: [
+          {
+            q: "Why is it risky to abruptly block Diya's screen without offering an alternative activity?",
+            options: [
+              "Because the sudden silence leaves her alone with heavy anxiety or panic ('the void problem').",
+              "Because it drains her phone battery faster."
+            ],
+            correctIndex: 0,
+            explanation: "Right. When someone uses screens to feel safe, yanking the screen away without a gentle bridge can feel overwhelming."
+          },
+          {
+            q: "How many pieces of information can human working memory comfortably hold at once?",
+            options: [
+              "4 to 7 items (and even less when tired or overwhelmed).",
+              "Around 20 to 25 items."
+            ],
+            correctIndex: 0,
+            explanation: "Yes—4 to 7 items is the biological limit, which is why cluttered dashboards exhaust people with ADHD."
+          }
+        ],
+        notePrompt: "Add user research or persona notes for Section 1:"
+      },
+      {
+        id: "section-2",
+        number: "Section 2",
+        title: "Psychology, Brain Science & Habit Change",
+        readTime: "6 min read",
+        subtitle: "How dopamine really works, the 23-minute focus cost, and why the brain is adapting—not permanently broken.",
+        threeLineSummary: [
+          "Even a silent phone on a desk drains focus, and a single interruption takes an average of 23 minutes and 15 seconds to recover from.",
+          "Dopamine isn't about pleasure—it's about unpredictable craving, which leaves users frantically 'wanting' to scroll while 'liking' it less and less.",
+          "Despite scary headlines about 'brain rot,' adult neuroplasticity lets the brain rewire these habits over 1 to 3 months when supported by calm choices."
+        ],
+        cards: [
+          {
+            id: "s2-c1",
+            title: "The Hidden Cost on Focus & Working Memory",
+            summary: "Mere presence, the 23-minute recovery gap, and the Zeigarnik effect.",
+            claims: [
+              {
+                id: "s2-cl1",
+                title: "The Mere Presence Effect",
+                evidence: "Strong",
+                provenance: "Project docs",
+                text: "Even when a phone is turned off and face-down on the desk, its physical visibility lowers scores on focus and memory tests because the brain spends working memory just trying not to touch it."
+              },
+              {
+                id: "s2-cl2",
+                title: "23 Minutes & 15 Seconds to Regain Deep Focus",
+                evidence: "Strong",
+                provenance: "Project docs",
+                text: "Field studies of knowledge workers show that after a single digital interruption, it takes an average of 23 minutes and 15 seconds to return to deep, settled focus. Switching mental strategies adds 100–200ms of neural delay per switch."
+              },
+              {
+                id: "s2-cl3",
+                title: "The Zeigarnik Effect & Unread Badges",
+                evidence: "Strong",
+                provenance: "Project docs",
+                text: "Unread notification badges exploit the Zeigarnik effect—the brain's habit of keeping unfinished tasks looping in working memory until they are closed—creating background anxiety."
+              }
+            ]
+          },
+          {
+            id: "s2-c2",
+            title: "Dopamine, Slot Machines & Two Competing Minds",
+            summary: "Why people keep scrolling even when they feel numb and bored.",
+            claims: [
+              {
+                id: "s2-cl4",
+                title: "Dopamine = Reward Prediction Error (Wanting vs. Liking)",
+                evidence: "Strong",
+                provenance: "Project docs",
+                text: "Dopamine measures unpredictable anticipation, not pleasure. Infinite feeds use variable ratio schedules (like slot machines), splitting the brain into intense 'wanting' (compulsive scrolling) paired with low 'liking' (feeling empty)."
+              },
+              {
+                id: "s2-cl5",
+                title: "Hyperbolic Discounting",
+                evidence: "Strong",
+                provenance: "Project docs",
+                text: "The human brain values a tiny immediate relief right now far more than a huge reward next month—which is why opening Instagram for instant relief repeatedly beats working on long-term goals."
+              },
+              {
+                id: "s2-cl6",
+                title: "System 1 (First Mind) vs. System 2 (Second Mind)",
+                evidence: "Strong",
+                provenance: "Project docs",
+                text: "System 1 is fast, automatic, and run by the basal ganglia. System 2 is slow, logical, and lives in the prefrontal cortex. Stress and evening fatigue (ego depletion) weaken System 2, letting System 1 unlock the phone on autopilot."
+              }
+            ]
+          },
+          {
+            id: "s2-c3",
+            title: "Resolving Disagreement #1: Brain Damage vs. Neuroplasticity",
+            summary: "Why we reject scary 'permanent brain rot' claims in favor of a 90-day neuroplastic recovery arc.",
+            claims: [
+              {
+                id: "s2-cl7",
+                title: "Why Alarmist 'Digital Dementia' Framing Fails Users",
+                evidence: "Moderate",
+                provenance: "Project docs",
+                text: "Cross-sectional MRI scans show gray and white matter differences in heavy screen users, but framing this as permanent brain damage causes learned helplessness. Anxious users feel broken and stop trying."
+              },
+              {
+                id: "s2-cl8",
+                title: "The 4-Stage Adult Neuroplasticity Timeline (90 Days)",
+                evidence: "Strong",
+                provenance: "Project docs",
+                text: "Brain changes are reversible adaptations: Stage 1 (Days 1–7) is high conscious effort (95% effort / 10% habit); Stage 2 (Weeks 2–4) resets dopamine sensitivity; Stage 3 (Months 1–3) shifts control into automatic basal ganglia habits (65% habit); Stage 4 (3+ Months) integrates into calm identity."
+              },
+              {
+                id: "s2-cl9",
+                title: "Attention Restoration Theory ('Soft Fascination')",
+                evidence: "Strong",
+                provenance: "Project docs",
+                text: "Overworked prefrontal attention recovers best through 'soft fascination'—gentle, low-demand offline sights like looking at trees, clouds, or slow breathing that let executive control rest."
+              }
+            ]
+          }
+        ],
+        takeaways: [
+          "Dopamine drives craving ('wanting'), not satisfaction ('liking').",
+          "Scaring people about brain shrinkage makes them give up; teaching them about neuroplasticity builds hope.",
+          "Relapses during high stress are normal—and re-stabilizing is 3–4x faster because the new pathways aren't erased."
+        ],
+        appMeaning: [
+          "Use external friction gates in Weeks 1–2 when conscious willpower is fragile.",
+          "Guide users toward 'soft fascination' (looking out a window, slow sighs) during the 2-minute bridge.",
+          "Support Self-Determination Theory: Autonomy (free choice), Competence (gentle progress), and Relatedness (warm tone)."
+        ],
+        reflections: [
+          {
+            q: "What does dopamine actually measure when you scroll an infinite feed?",
+            options: [
+              "Reward prediction error—the craving spike when a reward is uncertain.",
+              "How happy and nourished you feel after reading a post."
+            ],
+            correctIndex: 0,
+            explanation: "Yes! That's why someone can scroll for an hour feeling completely bored yet still unable to stop."
+          },
+          {
+            q: "How long does it typically take for a new response to shift from tired willpower (prefrontal cortex) into an easier habit (basal ganglia)?",
+            options: [
+              "Around 1 to 3 months of gentle, consistent practice.",
+              "Overnight if you use a strict blocker."
+            ],
+            correctIndex: 0,
+            explanation: "Exactly. Months 1 to 3 are when the basal ganglia starts taking over the heavy lifting."
+          }
+        ],
+        notePrompt: "Add psychology or behavioral design notes for Section 2:"
+      },
+      {
+        id: "section-3",
+        number: "Section 3",
+        title: "UX Patterns, Core Loop & Technical Reality",
+        readTime: "6 min read",
+        subtitle: "Solving 'the void problem,' working within Android/iOS limits, and why we use a Focus Anchor instead of streaks.",
+        threeLineSummary: [
+          "When someone closes an addictive app, they hit an uncomfortable 'void' of restlessness and dropping dopamine—so the pause must offer a 2-minute bridge activity.",
+          "Android and iOS security sandboxes mean interception must happen at app launch or via usage quotas, with an honest pre-screen explaining Android permissions.",
+          "Instead of bloated life-planners or guilt-inducing streaks, the design uses a single 'Focus Anchor' question and a quiet fog-clearing visual metaphor."
+        ],
+        cards: [
+          {
+            id: "s3-c1",
+            title: "The 5-Step Core Loop & Solving 'The Void Problem'",
+            summary: "How Mental Health, Attention, and Direction merge into one 90-second flow.",
+            claims: [
+              {
+                id: "s3-cl1",
+                title: "The Post-Scroll Void Problem",
+                evidence: "Moderate",
+                provenance: "Project docs",
+                text: "When a user stops scrolling Instagram, they are immediately hit with the exact loneliness or task anxiety they were trying to escape, plus a sudden dopamine drop. If a blocker just locks the screen and leaves, the user disables it."
+              },
+              {
+                id: "s3-cl2",
+                title: "One Seamless 5-Step MVP Loop",
+                evidence: "Strong",
+                provenance: "Both",
+                text: "1. App-Open Trigger (System 1 autopilot) → 2. Calm Mirror Pause (System 2 wakes up with Focus Anchor reminder) → 3. Conscious Choice (Emergency Bypass or Pause) → 4. Two-Minute Bridge Activity (Sensory/Breathing grounding) → 5. Offline Return."
+              },
+              {
+                id: "s3-cl3",
+                title: "2-Minute CBT/DBT Grounding Bridges",
+                evidence: "Strong",
+                provenance: "New research",
+                text: "Effective micro-interventions offer two instant paths: Action/Sensory Grounding (a physiological sigh—two quick nose inhales, one long exhale—or naming 3 objects in the room) and Thought Grounding (tapping one button to name the feeling: Boredom, Task Stress, or Loneliness)."
+              }
+            ]
+          },
+          {
+            id: "s3-c2",
+            title: "Resolving Disagreement #2: Mobile OS Sandboxing (Android & iOS)",
+            summary: "What Android AccessibilityService, UsageStatsManager, and iOS Screen Time API can actually do.",
+            claims: [
+              {
+                id: "s3-cl4",
+                title: "Android Real-Time Window Interception (AccessibilityService)",
+                evidence: "Strong",
+                provenance: "New research",
+                text: "Detecting an app launch in real time on Android requires AccessibilityService (TYPE_WINDOW_STATE_CHANGED) + SYSTEM_ALERT_WINDOW. However, Android shows a scary security warning, some banking apps block it, and budget phones kill it to save battery."
+              },
+              {
+                id: "s3-cl5",
+                title: "Android UsageStatsManager & iOS Screen Time API",
+                evidence: "Strong",
+                provenance: "New research",
+                text: "Android's UsageStatsManager has lower battery/security friction but batches data, making it best for 15-minute quota triggers and weekly summaries. On iOS, the Screen Time API (FamilyControls/ManagedSettings) uses private tokens to show a custom shield at app launch."
+              },
+              {
+                id: "s3-cl6",
+                title: "Explainable AI (Time2Stop JITAI Pattern)",
+                evidence: "Strong",
+                provenance: "New research",
+                text: "Because users adapt to static delays in 10 days, the 2024 Time2Stop study showed that briefly explaining why a pause triggered ('5th unlock in 20 minutes') and asking if it helped builds trust and stops annoyance."
+              }
+            ]
+          },
+          {
+            id: "s3-c3",
+            title: "Resolving Disagreements #3 & #4: Focus Anchor & No Streaks",
+            summary: "How to preserve personal meaning without building a heavy productivity app or slot-machine badges.",
+            claims: [
+              {
+                id: "s3-cl7",
+                title: "The Single 'Focus Anchor' (Replacing a Heavy Direction Tab)",
+                evidence: "Strong",
+                provenance: "Project docs",
+                text: "Habit change lasts when tied to personal values, but heavy goal-planners overwhelm tired users. Asking just one warm question at onboarding ('What matters to you this month?') and reflecting it back during pauses delivers meaning with zero extra tabs."
+              },
+              {
+                id: "s3-cl8",
+                title: "Banning Streaks & Points (Preventing Motivation Crowding-Out)",
+                evidence: "Strong",
+                provenance: "Project docs",
+                text: "Streaks and XP points train the brain to care about numbers rather than real wellbeing, and breaking a 14-day streak causes shame and relapse."
+              },
+              {
+                id: "s3-cl9",
+                title: "The Fog-Clearing Metaphor & Emergency Bypass",
+                evidence: "Weak",
+                provenance: "Project docs",
+                text: "Instead of counters, the background can gently clear from misty to clear as the user makes conscious pauses (planned for v1.1 testing). Every pause must also include an always-working 'I need this now (15 mins)' bypass so students and workers never feel trapped."
+              }
+            ]
+          }
+        ],
+        takeaways: [
+          "Stopping a scroll creates an emotional void—the 2-minute grounding activity is what makes the pause sustainable.",
+          "Android's AccessibilityService needs a warm, honest pre-screen so the system security warning doesn't scare users away.",
+          "Always include an 'I need this for real work right now' bypass to protect user autonomy."
+        ],
+        appMeaning: [
+          "Prioritize the 5-step core loop first and test the fog-clearing visual metaphor in v1.1.",
+          "Offer two super-simple bridge choices: 3 physiological sighs or a 1-tap feeling check-in.",
+          "Never display consecutive day counters anywhere in the UI."
+        ],
+        reflections: [
+          {
+            q: "What is 'the void problem' when someone closes an addictive app?",
+            options: [
+              "The sudden wave of restlessness, loneliness, or task anxiety they were escaping, paired with a drop in dopamine.",
+              "An empty home screen with no app icons."
+            ],
+            correctIndex: 0,
+            explanation: "Spot on. Without a gentle 90-second bridge to calm the nervous system, people jump right back into the feed."
+          },
+          {
+            q: "How do we include 'Life Direction' in the MVP without overwhelming people with ADHD?",
+            options: [
+              "With a single 'Focus Anchor' question during onboarding that gently appears during pause prompts.",
+              "With a full calendar, daily to-do lists, and habit trackers."
+            ],
+            correctIndex: 0,
+            explanation: "Exactly. One meaningful phrase connects the pause to their real life with zero extra cognitive load."
+          }
+        ],
+        notePrompt: "Add UX flow or technical architecture notes for Section 3:"
+      },
+      {
+        id: "section-4",
+        number: "Section 4",
+        title: "Content Strategy, Tone & Microcopy",
+        readTime: "4 min read",
+        subtitle: "Speaking like a 'calm mirror with a backbone'—8 ready-to-test prompts that avoid guilt and rebellion.",
+        threeLineSummary: [
+          "When people finish doomscrolling, they already feel guilty—so if an app scolds them, their brain rebels (psychological reactance) and scrolls even more.",
+          "The product voice must act as a 'calm mirror with a backbone': warm, plain, and honest, without sounding like a hospital form or a clingy AI friend.",
+          "Rotating context-aware prompts across onboarding, app-open, bypass, and relapse keeps the brain from tuning them out after week two."
+        ],
+        cards: [
+          {
+            id: "s4-c1",
+            title: "Avoiding Reactance & Matching the User's Stage",
+            summary: "Why scolding backfires and how people move nonlinearly through habit change.",
+            claims: [
+              {
+                id: "s4-cl1",
+                title: "Psychological Reactance (Why Scolding Backfires)",
+                evidence: "Strong",
+                provenance: "Project docs",
+                text: "When an app scolds a user ('You wasted 3 hours today!') or uses a pushy mascot, it triggers psychological reactance—an automatic defensive urge to protect personal freedom by rebelling against the rule."
+              },
+              {
+                id: "s4-cl2",
+                title: "Prompt Rotation Prevents Habituation",
+                evidence: "Strong",
+                provenance: "New research",
+                text: "Rotating different reflection questions at unlock stops the brain from going blind to the screen, as long as the questions stay short and effortless to read."
+              },
+              {
+                id: "s4-cl3",
+                title: "5 Nonlinear Stages of Change (Transtheoretical Model)",
+                evidence: "Strong",
+                provenance: "Project docs",
+                text: "Users move back and forth through Precontemplation (not ready), Contemplation (aware but unsure), Preparation, Action, and Maintenance/Relapse. Copy must meet them where they are without judgment."
+              }
+            ]
+          },
+          {
+            id: "s4-c2",
+            title: "The 8 Core In-App Microcopy Prompts (Part 1: Onboarding & Interception)",
+            summary: "Exact words for setting the Focus Anchor, explaining Android permissions, and pausing at unlock.",
+            claims: [
+              {
+                id: "s4-cl4",
+                title: "1. Onboarding Focus Anchor & 2. Android Permission Honesty",
+                evidence: "Strong",
+                provenance: "Both",
+                text: "Focus Anchor: \"No long forms. Just one question to start: What is one thing in offline life that deserves a little more space this month?\" | Android Warning: \"Android will show a scary warning next. This app only checks when a chosen app opens so it can offer a pause. It never reads screen text, messages, or passwords, and all data stays on this phone.\""
+              },
+              {
+                id: "s4-cl5",
+                title: "3. Emotional Escape Check & 4. Explainable Autopilot Mirror",
+                evidence: "Moderate",
+                provenance: "Both",
+                text: "Escape Check: \"Hey. If opening this app right now is a way to step away from something heavy, that makes sense. Want to take a 10-second breath before deciding?\" | Autopilot XAI: \"This is the 5th unlock in 20 minutes—it looks like autopilot. Before the feed loads, what is the next scroll hoping to find?\""
+              },
+              {
+                id: "s4-cl6",
+                title: "5. Focus Anchor Reflection Prompt",
+                evidence: "Strong",
+                provenance: "Project docs",
+                text: "\"Pause for a second. Earlier, [Focus Anchor] mattered most. Does opening this app right now move toward that, or just fill the space?\""
+              }
+            ]
+          },
+          {
+            id: "s4-c3",
+            title: "The 8 Core In-App Microcopy Prompts (Part 2: Bridge, Bypass & Relapse)",
+            summary: "Exact words for the 90-second reset, intentional work bypass, and returning after silence.",
+            claims: [
+              {
+                id: "s4-cl7",
+                title: "6. Post-Pause Bridge Activity Invitation",
+                evidence: "Strong",
+                provenance: "Both",
+                text: "\"Closing the app can leave a restless gap. Pick one 90-second reset before going back to the day: [Follow 3 slow breaths] or [Look at something far away].\""
+              },
+              {
+                id: "s4-cl8",
+                title: "7. Emergency Work Bypass & 8. Shame-Free Relapse Re-Entry",
+                evidence: "Strong",
+                provenance: "Both",
+                text: "Bypass: \"[I need this app for real use right now — Open for 15 mins]\" → \"Got it. Stepping aside for 15 minutes.\" | Relapse Re-Entry: \"Welcome back. Stepping away or slipping back into old loops is a normal part of how the brain adjusts. Nothing was lost—pick up right here.\""
+              }
+            ]
+          }
+        ],
+        takeaways: [
+          "Acknowledge the emotion first ('If opening this is a way to step away from something heavy, that makes sense') before asking a question.",
+          "Never use clingy AI phrases like 'I'll always be here for you' or send uninvited push notifications during sleep or work.",
+          "Treat relapse as a normal part of brain rewiring, never a broken streak."
+        ],
+        appMeaning: [
+          "Test these 8 lines with 5 real young adults during actual phone unlocks.",
+          "Give every pause screen two clean, guilt-free buttons: start the 90-second bridge or continue/bypass consciously.",
+          "Keep every prompt under 25 words so tired eyes can read it in two seconds."
+        ],
+        reflections: [
+          {
+            q: "What happens in the brain when an app says 'You wasted 3 hours today!'?",
+            options: [
+              "Psychological reactance—an automatic urge to rebel against the judgment and scroll more.",
+              "Immediate motivation and lasting discipline."
+            ],
+            correctIndex: 0,
+            explanation: "Yes. Shame drains the prefrontal cortex even further and triggers rebellion."
+          },
+          {
+            q: "Why do we explain Android's Accessibility warning in plain language before the system popup appears?",
+            options: [
+              "To build trust and assure the user we only check when an app opens, keeping 100% of data on the phone.",
+              "To trick the user into clicking accept quickly."
+            ],
+            correctIndex: 0,
+            explanation: "Right. Informed consent and plain honesty turn a scary OS warning into a moment of trust."
+          }
+        ],
+        notePrompt: "Add microcopy ideas or tone feedback for Section 4:"
+      },
+      {
+        id: "section-5",
+        number: "Section 5",
+        title: "Ethics, Crisis Safety & India DPDP Privacy",
+        readTime: "5 min read",
+        subtitle: "Why we ban open AI chat, how we connect to 24/7 Indian crisis helplines, and why 100% local storage wins.",
+        threeLineSummary: [
+          "Real emotional strength comes from human co-regulation—so the architecture strictly bans open-ended AI companion chat to prevent unhealthy emotional attachment.",
+          "Because users may open the app during a dark moment, the UI includes a permanent 1-tap crisis screen linking to India's free 24/7 Tele-MANAS (14416) and NIMHANS helplines.",
+          "Under India's DPDP Act, storing 100% of data locally on the phone with zero cloud servers and a 1-tap 'Wipe All Data' button protects privacy and shared family phones."
+        ],
+        cards: [
+          {
+            id: "s5-c1",
+            title: "Resolving Disagreement #5: Why We Ban Open-Ended AI Chatbots",
+            summary: "Clinical psychology guidance on co-regulation vs. artificial safety bubbles.",
+            claims: [
+              {
+                id: "s5-cl1",
+                title: "Human Co-Regulation vs. Parasocial AI Dependency",
+                evidence: "Strong",
+                provenance: "New research",
+                text: "Clinical psychologists in India (2026) emphasize that distress tolerance is built through small moments of real-world friction, and human nervous systems calm down through co-regulation (real human presence and care). Open-ended AI chatbots trap lonely youth in an artificial bubble that weakens offline confidence."
+              },
+              {
+                id: "s5-cl2",
+                title: "Strict 2-Minute Bounded Reflection Rule",
+                evidence: "Strong",
+                provenance: "Project docs",
+                text: "This product is a non-clinical behavioral tool, not therapy. Any guided reflection must be capped at 2 minutes using fixed tap-choices that nudge the user back to physical offline life or a real friend."
+              },
+              {
+                id: "s5-cl3",
+                title: "The 'Need-It-Less' Graduation KPI",
+                evidence: "Strong",
+                provenance: "Project docs",
+                text: "The system rejects Daily Active Users (DAU) and time-on-screen metrics. Success is measured by compulsive unlocks dropping over 4 to 12 weeks while time inside the companion stays under 3 minutes a day."
+              }
+            ]
+          },
+          {
+            id: "s5-c2",
+            title: "India's 24/7 Verified Crisis Escalation Protocol",
+            summary: "Immediate one-tap access to free, multilingual human counselors across India.",
+            claims: [
+              {
+                id: "s5-cl4",
+                title: "Tele-MANAS (14416 / 1800-891-4416) — 24/7 Free Govt Helpline",
+                evidence: "Strong",
+                provenance: "New research",
+                text: "A permanent 'Talk to a Real Person (24/7 Free Support)' button opens a calm crisis screen with one-tap calling to Tele-MANAS, staffed round-the-clock in 20+ Indian languages including Malayalam, Tamil, Hindi, and English."
+              },
+              {
+                id: "s5-cl5",
+                title: "NIMHANS, KIRAN, iCALL & Vandrevala Helplines",
+                evidence: "Strong",
+                provenance: "New research",
+                text: "Also lists verified support lines: NIMHANS Helpline (080-46110007), KIRAN (1800-599-0019), iCALL by TISS (022-25521111, Mon–Sat 10 AM–8 PM), and Vandrevala Foundation (+91 9999 666 555)."
+              }
+            ]
+          },
+          {
+            id: "s5-c3",
+            title: "India DPDP Act Compliance & Shared-Phone Privacy",
+            summary: "Why 100% on-device storage beats cloud servers legally, ethically, and financially.",
+            claims: [
+              {
+                id: "s5-cl6",
+                title: "Zero 'Legitimate Interest' Loophole & 7-Day Erasure Rule",
+                evidence: "Strong",
+                provenance: "New research",
+                text: "Unlike EU GDPR, India's Digital Personal Data Protection (DPDP) Act has no 'legitimate interest' exception for analytics—consent must be unconditional. It also mandates data erasure within 7 days (4x stricter than GDPR's 30 days) and holds creators liable for third-party SDK leaks."
+              },
+              {
+                id: "s5-cl7",
+                title: "100% Local-First On-Device Architecture + Instant Wipe",
+                evidence: "Strong",
+                provenance: "Both",
+                text: "By keeping all logs and Focus Anchors in an encrypted local database on the phone—with zero cloud servers and zero tracking SDKs—we eliminate breach risks and offer a 1-tap 'Delete All My Data Immediately' button (0-second erasure)."
+              },
+              {
+                id: "s5-cl8",
+                title: "Household Privacy Shield for Shared Indian Phones",
+                evidence: "Moderate",
+                provenance: "Project docs",
+                text: "Because phones are often shared with parents or siblings, the app includes an optional PIN/biometric lock and keeps lock-screen notifications completely neutral ('Time for a quick pause')."
+              }
+            ]
+          }
+        ],
+        takeaways: [
+          "Never build an open-ended AI chat companion for lonely users—it replaces real human co-regulation.",
+          "Always keep a 1-tap Indian crisis helpline directory (Tele-MANAS 14416) visible and accessible offline.",
+          "100% local on-device storage with zero third-party SDKs is the safest, cleanest way to respect India's DPDP Act."
+        ],
+        appMeaning: [
+          "Design a dedicated 'Talk to a Real Person' crisis card and a 1-tap 'Wipe All Data' settings card.",
+          "Add an optional biometric/PIN lock and disguised notification text for shared household phones.",
+          "Evaluate efficacy using the 'Graduation Metric' (<3 mins/day in app)."
+        ],
+        reflections: [
+          {
+            q: "Why does our design ban open-ended AI chatbots like Replika?",
+            options: [
+              "Because artificial intimacy traps lonely users in a safety bubble instead of building real human co-regulation.",
+              "Because AI chatbots cost too much server memory."
+            ],
+            correctIndex: 0,
+            explanation: "Exactly. Clinical guidance is clear: human nervous systems need real human presence and gentle real-world friction."
+          },
+          {
+            q: "How does our 100% local-first storage handle India's DPDP Act 7-day data erasure rule?",
+            options: [
+              "A 1-tap 'Delete All My Data' button wipes the local phone database in under 1 second, with 0 bytes in the cloud.",
+              "Users have to email customer support and wait 7 business days."
+            ],
+            correctIndex: 0,
+            explanation: "Spot on. Local-only storage gives the user instant, total control over their own data."
+          }
+        ],
+        notePrompt: "Add ethics, privacy, or clinical safety notes for Section 5:"
+      },
+      {
+        id: "section-6",
+        number: "Section 6",
+        title: "Roadmap, Research Gaps & Open Questions",
+        readTime: "5 min read",
+        subtitle: "What belongs in the 5-screen MVP now, what waits for v1.1, what we never build, and 7 questions to test.",
+        threeLineSummary: [
+          "The product roadmap separates the essential 5-screen MVP from later releases so core behavioral testing can begin immediately.",
+          "Users with ADHD don't have to remember to open the companion every morning—once set up, it sits quietly in the background and wakes up only when an addictive app launches.",
+          "We separate 4 practical UX questions (which can be tested with 5 people in usability sessions) from 3 open scientific questions."
+        ],
+        cards: [
+          {
+            id: "s6-c1",
+            title: "Resolving Retention vs. Graduation for Users with ADHD",
+            summary: "How an app survives when users with ADHD forget it exists after two days.",
+            claims: [
+              {
+                id: "s6-cl1",
+                title: "Passive Background Interception vs. Active Browsing",
+                evidence: "Strong",
+                provenance: "Project docs",
+                text: "Once the user sets up app-open interception during onboarding, they never have to remember to open the companion. It waits quietly and appears automatically at the exact moment they tap Instagram or games."
+              },
+              {
+                id: "s6-cl2",
+                title: "Opt-In Gentle Check-In After 4 Days of Silence",
+                evidence: "Moderate",
+                provenance: "Project docs",
+                text: "If the background service is turned off for 4 days, the app sends just one warm, opt-in check-in notification that respects their choice without nagging."
+              }
+            ]
+          },
+          {
+            id: "s6-c2",
+            title: "Feature Priority Matrix: Must-Have MVP vs. Later vs. Never",
+            summary: "The 6 features to build in MVP, 4 to defer, and 1 category to ban forever.",
+            claims: [
+              {
+                id: "s6-cl3",
+                title: "Must-Have MVP (6 Core Features)",
+                evidence: "Strong",
+                provenance: "Both",
+                text: "1. Low-Friction Onboarding + Single 'Focus Anchor' + honest OS permission guide. 2. App-Open Interception + 10s Pause Prompt. 3. Two-Minute CBT/DBT Grounding Bridge. 4. 'I Need This Now' 15-min Emergency Bypass. 5. Shame-Free Relapse Re-Entry. 6. Local-Only Privacy + 1-Tap Indian Crisis Lifeline (Tele-MANAS 14416)."
+              },
+              {
+                id: "s6-cl4",
+                title: "Defer to v1.1 / v1.2 / v2.0",
+                evidence: "Weak",
+                provenance: "Both",
+                text: "v1.1: Fog-Clearing visual background metaphor (test if novelty fades). v1.2: Explainable Weekly Pattern Cards (Time2Stop XAI). v2.0: Bounded 3-turn reflection cards, Weekly Direction cards, and 'Message to Future Me'."
+              },
+              {
+                id: "s6-cl5",
+                title: "Avoid Forever (Never Build)",
+                evidence: "Strong",
+                provenance: "Both",
+                text: "Streaks, XP points, public leaderboards, and open-ended AI chatbots—they recreate variable-reward loops, trigger guilt, fuel comparison, and cause unhealthy attachment."
+              }
+            ]
+          },
+          {
+            id: "s6-c3",
+            title: "4 UX Gaps to Test vs. 3 Open Scientific Questions",
+            summary: "What can be validated in a 30-minute prototype test vs. what science hasn't settled yet.",
+            claims: [
+              {
+                id: "s6-cl6",
+                title: "4 Testable UX Gaps (Usability Testing)",
+                evidence: "Observational",
+                provenance: "Project docs",
+                text: "1. Will users pause at the prompt or swipe away immediately? 2. Do Maya and Diya prefer app-open interruption or emotional grounding? 3. Which 60-second bridge UI feels calmer (visual breathing pacer vs. 3-tap emotion check-in)? 4. Does an opt-in weekly check-in toggle work after 4 days of silence?"
+              },
+              {
+                id: "s6-cl7",
+                title: "3 Unsettled Scientific Questions",
+                evidence: "Strong",
+                provenance: "Project docs",
+                text: "5. Are structural brain differences from early teen screen overuse 100% reversible over decades? 6. What exact mix of genetics (DRD2/DRD4), ADHD, and trauma makes some heavy users addicted while others stay stable? 7. Where is the exact line between heavy normal use and addiction? (Focus on 'choice vs. autopilot' rather than raw hours)."
+              }
+            ]
+          }
+        ],
+        takeaways: [
+          "The background interception service solves the ADHD memory problem—no daily habit logging required.",
+          "Keep the MVP strictly to the 6 Must-Have features so core behavioral testing stays focused.",
+          "Measure whether the user felt 'in choice vs. on autopilot' rather than judging total screen-time hours."
+        ],
+        appMeaning: [
+          "Focus wireframing and usability testing on the 6 core MVP screens.",
+          "Use the Feature Priority Matrix to keep scope aligned across collaborators.",
+          "Be transparent about what is empirically proven versus what is being user-tested next."
+        ],
+        reflections: [
+          {
+            q: "Why doesn't a user with ADHD need to remember to open our companion app every day?",
+            options: [
+              "Because it runs quietly in the background and wakes up automatically when an addictive app is tapped.",
+              "Because it sends loud hourly alarm bells."
+            ],
+            correctIndex: 0,
+            explanation: "Yes! Designing around working-memory limits means letting the environment trigger the support automatically."
+          },
+          {
+            q: "Instead of judging raw screen-time hours, what is the healthier way to measure digital wellbeing?",
+            options: [
+              "Whether the person felt 'in choice' versus 'on autopilot' when using their phone.",
+              "Whether they kept their phone usage under 30 minutes a day."
+            ],
+            correctIndex: 0,
+            explanation: "Spot on. Raw hours don't tell the whole story—compulsive, emotionally driven autopilot is what hurts."
+          }
+        ],
+        notePrompt: "Add roadmap or usability testing notes for Section 6:"
+      }
+    ];
+
+    /**
+     * ============================================================================
+     * 2. MASTER SOURCES TABLE DATA
+     * ============================================================================
+     */
+    const SOURCES_DATA = [
+      {
+        title: "DEEP RESEARCH.pdf",
+        type: "Project docs",
+        evidence: "Strong",
+        summary: "Synthesis of Phases 1–3 + 2024–2026 psychology studies. Covers shared root cause of escapism, variable rewards, mere presence effect, Zeigarnik effect, dual-process theory, and the 1–3 month neuroplasticity timeline."
+      },
+      {
+        title: "Project Report: Mental Wellness App Strategy & Critique Audit",
+        type: "Project docs",
+        evidence: "Observational",
+        summary: "Product strategy audit & critique log. Defines 'calm mirror with a backbone', anonymized personas (Maya, Diya, Kabir, Rohan, Aarav), 5-step MVP core flow, Focus Anchor, Bridge Activity, Fog metaphor, and 7 microcopy drafts."
+      },
+      {
+        title: "Phase 1- Cognitive Psychology.docx & Phase 1- Cognitive Psychology 2.docx",
+        type: "Project docs",
+        evidence: "Strong",
+        summary: "Master Problem & Solution Definition Reports. Covers Fogg Behavior Model (B=MAP), Self-Determination Theory, Transtheoretical Model, 23m 15s task-switching cost, 4–7 item working memory limit, hyperbolic discounting, and Attention Restoration Theory ('soft fascination')."
+      },
+      {
+        title: "Phase 2- Mobile Addiction.docx",
+        type: "Project docs",
+        evidence: "Strong",
+        summary: "Neuroscience & lived recovery stories. Covers dopamine reward prediction error (wanting vs. liking), infinite scroll design, 40,000-youth depression/anxiety meta-analysis (3x risk), and 68.7% vs. 57.1% poor sleep prevalence."
+      },
+      {
+        title: "Phase 3- The Darkside.docx",
+        type: "Project docs",
+        evidence: "Moderate",
+        summary: "Cross-sectional MRI studies on gray/white matter differences in prefrontal cortex, insula, and corpus callosum. Balanced in our product framework by adult neuroplasticity science."
+      },
+      {
+        title: "Android OS Interception & Permission Audits (Google IssueTracker, ArXiv 2026, Nicheloom)",
+        type: "New research",
+        evidence: "Strong",
+        summary: "Technical audit of Android AccessibilityService (TYPE_WINDOW_STATE_CHANGED real-time detection, OS scare screens, battery killers) vs. UsageStatsManager (delayed quota batching) and 'I need this now' bypass mechanics."
+      },
+      {
+        title: "iOS Screen Time API Architecture (Apple Developer Docs, CrunchyBagel)",
+        type: "New research",
+        evidence: "Strong",
+        summary: "FamilyControls, ManagedSettings, and DeviceActivity frameworks using privacy-preserving opaque app tokens and app-open shields."
+      },
+      {
+        title: "Just-in-Time Adaptive Interventions (JITAIs) & Self-Nudging Trials (JMIR 2026, Time2Stop ArXiv 2024)",
+        type: "New research",
+        evidence: "Strong",
+        summary: "Field trial validation of One Sec, MindPhone, and MyTime; Time2Stop Explainable AI (XAI) feedback loops; prompt rotation to prevent 10-day habituation."
+      },
+      {
+        title: "CBT/DBT Micro-Interventions & Grounding UX (ArXiv 2026, Brightn, Lumos)",
+        type: "New research",
+        evidence: "Strong",
+        summary: "60–120 second action/sensory grounding (physiological sigh, 3-object room scan) vs. thought grounding (1-tap emotion naming) and calm earth/porcelain tones."
+      },
+      {
+        title: "Indian Crisis Helplines & Clinical Co-Regulation Guidance (MoHFW Tele-MANAS, NIMHANS, Hindustan Times 2026)",
+        type: "New research",
+        evidence: "Strong",
+        summary: "24/7 free multilingual Tele-MANAS helpline (14416 / 1800-891-4416), NIMHANS (080-46110007), KIRAN (1800-599-0019), iCALL (022-25521111), and clinical warnings against AI companion dependency."
+      },
+      {
+        title: "India Digital Personal Data Protection (DPDP) Act 2023/2026 Compliance (MeitY Gazette, SFLC.in)",
+        type: "New research",
+        evidence: "Strong",
+        summary: "Unconditional consent mandate (zero 'legitimate interest' loophole), 7-day data erasure requirement (4x faster than GDPR), third-party SDK liability, and local-first on-device architecture."
+      }
+    ];
+
+    const STORAGE_KEY = "calm_futures_research_reader_v1";
+
+    const defaultState = {
+      currentView: "home", // "home" | "section" | "bookmarks" | "sources"
+      currentSectionIndex: 0,
+      completedSections: {}, // { "section-0": true }
+      bookmarkedClaims: {},  // { "s0-cl1": true }
+      bookmarkedSections: {},// { "section-0": true }
+      notes: {},             // { "section-0": "user note text", "general": "..." }
+      quizAnswers: {},       // { "section-0_0": 0 }
+      theme: "light",
+      textSize: "medium",    // "small" | "medium" | "large" | "xlarge"
+      focusMode: false
+    };
+
+    let state = loadState();
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return { ...defaultState };
+        const parsed = JSON.parse(raw);
+        return {
+          ...defaultState,
+          ...parsed,
+          completedSections: parsed.completedSections || {},
+          bookmarkedClaims: parsed.bookmarkedClaims || {},
+          bookmarkedSections: parsed.bookmarkedSections || {},
+          notes: parsed.notes || {},
+          quizAnswers: parsed.quizAnswers || {}
+        };
+      } catch (e) {
+        return { ...defaultState };
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {
+        // Fallback if private browsing blocks storage
+      }
+      updateTopChrome();
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function getEvidenceBadgeClass(ev) {
+      const lower = ev.toLowerCase();
+      if (lower.includes("strong")) return "chip-strong";
+      if (lower.includes("moderate")) return "chip-moderate";
+      if (lower.includes("experience") || lower.includes("observational")) return "chip-experience";
+      return "chip-weak";
+    }
+
+    function getProvenanceBadgeClass(prov) {
+      const lower = prov.toLowerCase();
+      if (lower.includes("doc")) return "tag-docs";
+      if (lower.includes("new")) return "tag-external";
+      return "tag-both";
+    }
+
+    function getProvenanceLabel(prov) {
+      if (prov === "Both") return "Project docs + New research";
+      return prov;
+    }
+
+    function applyPreferences() {
+      document.documentElement.setAttribute("data-theme", state.theme);
+      document.documentElement.setAttribute("data-text-size", state.textSize);
+      document.body.classList.toggle("focus-mode-active", !!state.focusMode);
+
+      const themeBtn = document.getElementById("btn-theme");
+      if (themeBtn) {
+        themeBtn.textContent = state.theme === "dark" ? "Light Mode" : "Dark Mode";
+      }
+
+      const sizeLabels = { small: "Text: S", medium: "Text: M", large: "Text: L", xlarge: "Text: XL" };
+      const sizeBtn = document.getElementById("btn-text-size");
+      if (sizeBtn) {
+        sizeBtn.textContent = sizeLabels[state.textSize] || "Text: M";
+      }
+
+      const focusBtn = document.getElementById("btn-focus-mode");
+      if (focusBtn) {
+        focusBtn.textContent = state.focusMode ? "Focus Mode: On" : "Focus Mode: Off";
+        focusBtn.setAttribute("aria-pressed", state.focusMode ? "true" : "false");
+        focusBtn.classList.toggle("btn-active", !!state.focusMode);
+      }
+    }
+
+    function updateTopChrome() {
+      const total = REPORT_DATA.length;
+      const doneCount = REPORT_DATA.filter(s => state.completedSections[s.id]).length;
+      const pct = Math.round((doneCount / total) * 100);
+
+      const fill = document.getElementById("top-progress-fill");
+      if (fill) fill.style.width = pct + "%";
+
+      const statusText = document.getElementById("progress-status-text");
+      if (statusText) {
+        statusText.textContent = `${doneCount} of ${total} sections done`;
+      }
+
+      const savedClaimsCount = Object.keys(state.bookmarkedClaims).filter(k => state.bookmarkedClaims[k]).length;
+      const savedSectionsCount = Object.keys(state.bookmarkedSections).filter(k => state.bookmarkedSections[k]).length;
+      const totalSaved = savedClaimsCount + savedSectionsCount;
+      const badge = document.getElementById("bookmark-count-badge");
+      if (badge) badge.textContent = totalSaved;
+
+      // Active state on top nav buttons
+      document.getElementById("nav-home")?.classList.toggle("btn-active", state.currentView === "home");
+      document.getElementById("nav-bookmarks")?.classList.toggle("btn-active", state.currentView === "bookmarks");
+      document.getElementById("nav-sources")?.classList.toggle("btn-active", state.currentView === "sources");
+    }
+
+    function renderHomeView() {
+      const total = REPORT_DATA.length;
+      const doneCount = REPORT_DATA.filter(s => state.completedSections[s.id]).length;
+
+      // Find first unfinished section to suggest
+      let nextIndex = REPORT_DATA.findIndex(s => !state.completedSections[s.id]);
+      if (nextIndex === -1) nextIndex = 0;
+      const nextSection = REPORT_DATA[nextIndex];
+
+      let html = `
+        <div class="privacy-banner focus-dimmable animate-in" role="note">
+          <span aria-hidden="true" style="font-size:18px;">🛡️</span>
+          <div>
+            <strong>Participant Privacy Notice:</strong> ${escapeHtml(PRIVACY_NOTE)}
+          </div>
+        </div>
+
+        <section class="card focus-dimmable animate-in" style="animation-delay: 40ms;" aria-labelledby="start-here-heading">
+          <div class="tag-row">
+            <span class="chip chip-moderate">Interactive Research Companion</span>
+            <span class="tag-small tag-both">Self-paced • Saved locally</span>
+          </div>
+          <h1 id="start-here-heading" style="margin-bottom: var(--space-3);">
+            Take your time. You don't need to finish this today.
+          </h1>
+          <p style="color: var(--color-text-muted);">
+            This interactive companion breaks our master research on mobile and cyber addiction into 7 calm, 5-minute modules. Details stay tucked inside expandable cards so you can explore without cognitive overload.
+          </p>
+          <div style="display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; margin-top: var(--space-4);">
+            <button type="button" class="btn btn-primary" onclick="openSection(${nextIndex})">
+              ${doneCount === 0 ? "Start with Section 0" : (doneCount === total ? "Review Section 0" : `Continue: ${escapeHtml(nextSection.number)}`)} →
+            </button>
+            <span style="font-size: calc(14px * var(--font-scale)); color: var(--color-text-muted);">
+              ${doneCount === total ? "All 7 sections read." : `${doneCount} of ${total} completed so far.`}
+            </span>
+          </div>
+        </section>
+
+        <div class="focus-dimmable animate-in" style="animation-delay: 80ms; display:flex; align-items:center; justify-content:space-between; margin: var(--space-6) 0 var(--space-3);">
+          <h2 style="margin:0;">All Research Modules</h2>
+          <span style="font-size: calc(13px * var(--font-scale)); color: var(--color-text-muted);">One section at a time</span>
+        </div>
+      `;
+
+      REPORT_DATA.forEach((sec, idx) => {
+        const isDone = !!state.completedSections[sec.id];
+        const isSaved = !!state.bookmarkedSections[sec.id];
+        const delayMs = 100 + idx * 35;
+        html += `
+          <div class="section-list-item focus-dimmable animate-in" style="animation-delay: ${delayMs}ms;" role="button" tabindex="0" onclick="openSection(${idx})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openSection(${idx});}">
+            <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap: var(--space-2);">
+              <div class="tag-row" style="margin-bottom:0;">
+                <span class="chip ${isDone ? 'chip-strong' : 'chip-weak'}">
+                  ${isDone ? "✓ Done" : escapeHtml(sec.number)}
+                </span>
+                <span class="tag-small chip-weak">${escapeHtml(sec.readTime)}</span>
+                ${isSaved ? `<span class="tag-small chip-moderate">★ Saved</span>` : ""}
+              </div>
+              <span style="font-size: calc(13px * var(--font-scale)); color: var(--color-primary); font-weight: 500;">Read module →</span>
+            </div>
+            <div>
+              <h3 style="margin: var(--space-1) 0;">${escapeHtml(sec.title)}</h3>
+              <p style="margin:0; color: var(--color-text-muted); font-size: calc(15px * var(--font-scale));">
+                ${escapeHtml(sec.subtitle)}
+              </p>
+            </div>
+          </div>
+        `;
+      });
+
+      const view = document.getElementById("app-view");
+      view.innerHTML = html;
+      attachFocusModeListeners();
+    }
+
+    function renderInteractiveWidgetForSection(secId) {
+      if (secId === "section-2") {
+        const s0 = NEURO_STAGES[0];
+        return `
+          <section class="interactive-widget focus-dimmable animate-in" aria-label="Interactive 90-Day Neuroplasticity Explorer">
+            <div class="widget-accent-bar"></div>
+            <div class="tag-row">
+              <span class="chip chip-strong">Interactive Simulation</span>
+              <span class="tag-small tag-docs">90-Day Brain Rewiring Timeline</span>
+            </div>
+            <h3 style="margin-bottom: var(--space-1);">Explore How Control Shifts from Effort to Habit</h3>
+            <p style="font-size: calc(14.5px * var(--font-scale)); color: var(--color-text-muted); margin-bottom: var(--space-3);">
+              Tap each stage below to see how conscious prefrontal effort (System 2) gradually hands the wheel over to automatic basal ganglia habits (System 1).
+            </p>
+            <div class="stage-tabs" role="tablist">
+              ${NEURO_STAGES.map((st, i) => `
+                <button type="button" class="stage-tab ${i === 0 ? 'active' : ''}" id="neuro-tab-${i}" onclick="selectNeuroStage(${i})">
+                  <div style="font-size: 11.5px; opacity: 0.8;">${escapeHtml(st.stage)}</div>
+                  <div>${escapeHtml(st.title)}</div>
+                </button>
+              `).join("")}
+            </div>
+            <div class="claim-item" style="margin-bottom:0;">
+              <div class="meter-row">
+                <div class="meter-label">
+                  <span>Conscious Prefrontal Effort (System 2)</span>
+                  <span id="neuro-effort-val">${s0.effort}%</span>
+                </div>
+                <div class="meter-track">
+                  <div id="neuro-effort-bar" class="meter-fill" style="width: ${s0.effort}%; background-color: var(--color-primary);"></div>
+                </div>
+              </div>
+              <div class="meter-row">
+                <div class="meter-label">
+                  <span>Automatic Basal Ganglia Habit (System 1)</span>
+                  <span id="neuro-habit-val">${s0.habit}%</span>
+                </div>
+                <div class="meter-track">
+                  <div id="neuro-habit-bar" class="meter-fill" style="width: ${s0.habit}%; background-color: var(--color-success);"></div>
+                </div>
+              </div>
+              <p id="neuro-stage-desc" style="margin: var(--space-3) 0 0; font-size: calc(14.5px * var(--font-scale));">
+                ${escapeHtml(s0.summary)}
+              </p>
+            </div>
+          </section>
+        `;
+      }
+
+      if (secId === "section-3") {
+        return `
+          <section class="interactive-widget focus-dimmable animate-in" aria-label="Interactive 2-Minute Grounding Bridge Demo">
+            <div class="widget-accent-bar"></div>
+            <div class="tag-row">
+              <span class="chip chip-strong">Interactive Prototype</span>
+              <span class="tag-small tag-external">Step 4: The Grounding Bridge</span>
+            </div>
+            <h3 style="margin-bottom: var(--space-1);">Try the Physiological Sigh Pacer</h3>
+            <p style="font-size: calc(14.5px * var(--font-scale)); color: var(--color-text-muted); margin-bottom: var(--space-2);">
+              To solve "the void problem" right after closing an app, users can do 3 physiological sighs (two quick nose inhales, followed by one long slow exhale). Try one cycle right here:
+            </p>
+            <div class="breath-stage">
+              <div class="breath-orb-wrap">
+                <div id="breath-orb" class="breath-orb"></div>
+              </div>
+              <div id="breath-status" style="font-family: var(--font-display); font-size: calc(18px * var(--font-scale)); font-weight: 500; margin-bottom: var(--space-3);">
+                Ready whenever you are
+              </div>
+              <button type="button" class="btn btn-primary" id="btn-start-breath" onclick="runBreathingCycle()">
+                Try 1 Calming Breath Cycle (7s)
+              </button>
+            </div>
+          </section>
+        `;
+      }
+
+      return "";
+    }
+
+    window.selectNeuroStage = function(idx) {
+      const st = NEURO_STAGES[idx];
+      if (!st) return;
+      NEURO_STAGES.forEach((_, i) => {
+        const tab = document.getElementById("neuro-tab-" + i);
+        if (tab) tab.classList.toggle("active", i === idx);
+      });
+      const effortVal = document.getElementById("neuro-effort-val");
+      const effortBar = document.getElementById("neuro-effort-bar");
+      const habitVal = document.getElementById("neuro-habit-val");
+      const habitBar = document.getElementById("neuro-habit-bar");
+      const desc = document.getElementById("neuro-stage-desc");
+
+      if (effortVal) effortVal.textContent = st.effort + "%";
+      if (effortBar) effortBar.style.width = st.effort + "%";
+      if (habitVal) habitVal.textContent = st.habit + "%";
+      if (habitBar) habitBar.style.width = st.habit + "%";
+      if (desc) desc.textContent = st.summary;
+    };
+
+    let breathTimeouts = [];
+    window.runBreathingCycle = function() {
+      breathTimeouts.forEach(t => clearTimeout(t));
+      breathTimeouts = [];
+
+      const orb = document.getElementById("breath-orb");
+      const status = document.getElementById("breath-status");
+      const btn = document.getElementById("btn-start-breath");
+      if (!orb || !status || !btn) return;
+
+      btn.disabled = true;
+      orb.className = "breath-orb inhale-1";
+      status.textContent = "Inhale steadily through your nose...";
+
+      breathTimeouts.push(setTimeout(() => {
+        if (!document.getElementById("breath-orb")) return;
+        orb.className = "breath-orb inhale-2";
+        status.textContent = "One quick top-up sip of air...";
+      }, 1700));
+
+      breathTimeouts.push(setTimeout(() => {
+        if (!document.getElementById("breath-orb")) return;
+        orb.className = "breath-orb exhale";
+        status.textContent = "Long, slow exhale through your mouth...";
+      }, 2700));
+
+      breathTimeouts.push(setTimeout(() => {
+        if (!document.getElementById("breath-orb")) return;
+        orb.className = "breath-orb";
+        status.textContent = "Notice your shoulders drop. Ready again whenever you like.";
+        btn.disabled = false;
+        btn.textContent = "Repeat Breath Cycle (7s)";
+      }, 6400));
+    };
+
+    function renderSectionView() {
+      const idx = state.currentSectionIndex;
+      const sec = REPORT_DATA[idx] || REPORT_DATA[0];
+      const isDone = !!state.completedSections[sec.id];
+      const isBookmarked = !!state.bookmarkedSections[sec.id];
+
+      let html = `
+        <div class="section-top-meta animate-in" style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap: var(--space-2); margin-bottom: var(--space-4);">
+          <button type="button" class="btn btn-icon" onclick="navigateView('home')">
+            ← Back to all modules
+          </button>
+          <div style="display:flex; flex-wrap:wrap; gap: var(--space-2);">
+            <button type="button" class="btn btn-icon ${isBookmarked ? 'btn-active' : ''}" onclick="toggleBookmarkSection('${sec.id}')">
+              ${isBookmarked ? "★ Saved for later" : "☆ Save section"}
+            </button>
+            <button type="button" class="btn btn-icon" onclick="toggleAllCardsInSection(true)">
+              Expand all cards
+            </button>
+            <button type="button" class="btn btn-icon" onclick="toggleAllCardsInSection(false)">
+              Collapse all
+            </button>
+          </div>
+        </div>
+
+        <header class="card focus-dimmable animate-in" style="animation-delay: 40ms;">
+          <div class="tag-row">
+            <span class="chip chip-moderate">${escapeHtml(sec.number)} of ${REPORT_DATA.length - 1}</span>
+            <span class="tag-small chip-weak">${escapeHtml(sec.readTime)}</span>
+            ${isDone ? `<span class="chip chip-strong">✓ Completed</span>` : ""}
+          </div>
+          <h1 style="margin-bottom: var(--space-2);">${escapeHtml(sec.title)}</h1>
+          <p style="color: var(--color-text-muted); margin-bottom:0;">${escapeHtml(sec.subtitle)}</p>
+        </header>
+
+        ${sec.id === "section-1" ? `
+          <div class="privacy-banner focus-dimmable animate-in" role="note">
+            <span aria-hidden="true" style="font-size:18px;">🔒</span>
+            <div>${escapeHtml(PRIVACY_NOTE)}</div>
+          </div>
+        ` : ""}
+
+        <!-- 3-Line Summary at the Top -->
+        <section class="summary-box focus-dimmable animate-in" style="animation-delay: 80ms;" aria-labelledby="summary-heading">
+          <span id="summary-heading" class="summary-label">3-Line Summary (The Short Version)</span>
+          <ol class="summary-list">
+            ${sec.threeLineSummary.map(line => `<li>${escapeHtml(line)}</li>`).join("")}
+          </ol>
+        </section>
+
+        ${renderInteractiveWidgetForSection(sec.id)}
+
+        <div class="focus-dimmable animate-in" style="animation-delay: 110ms; margin: var(--space-5) 0 var(--space-3); display:flex; align-items:center; justify-content:space-between;">
+          <h2 style="margin:0; font-size: calc(20px * var(--font-scale));">Deep-Dive Details (Tap any card to expand)</h2>
+        </div>
+      `;
+
+      // Collapsible Detail Cards
+      sec.cards.forEach((card, cIdx) => {
+        const delayMs = 130 + cIdx * 45;
+        html += `
+          <article class="collapse-card focus-dimmable animate-in" style="animation-delay: ${delayMs}ms;" data-open="false" id="card-${card.id}">
+            <button type="button" class="collapse-header" aria-expanded="false" onclick="toggleCollapseCard('${card.id}')">
+              <div>
+                <div style="font-size: calc(12px * var(--font-scale)); color: var(--color-text-muted); font-family: var(--font-body); font-weight: 500; margin-bottom: 2px;">
+                  Part ${cIdx + 1} of ${sec.cards.length} • ${card.claims.length} claims inside
+                </div>
+                <div>${escapeHtml(card.title)}</div>
+                <div style="font-size: calc(14px * var(--font-scale)); color: var(--color-text-muted); font-family: var(--font-body); font-weight: 400; margin-top: 4px;">
+                  ${escapeHtml(card.summary)}
+                </div>
+              </div>
+              <div class="collapse-meta">
+                <span class="collapse-icon" aria-hidden="true">▼</span>
+              </div>
+            </button>
+            <div class="collapse-body">
+              ${card.claims.map(claim => {
+                const claimSaved = !!state.bookmarkedClaims[claim.id];
+                return `
+                  <div class="claim-item" id="claim-${claim.id}">
+                    <div class="claim-header">
+                      <h4 class="claim-title">${escapeHtml(claim.title)}</h4>
+                      <button type="button" class="btn btn-icon ${claimSaved ? 'btn-active' : ''}" style="padding: 4px 10px; font-size: 12px;" onclick="toggleBookmarkClaim('${claim.id}')">
+                        ${claimSaved ? "★ Saved" : "☆ Save claim"}
+                      </button>
+                    </div>
+                    <div class="tag-row" style="margin-bottom: var(--space-2);">
+                      <span class="chip ${getEvidenceBadgeClass(claim.evidence)}" title="Evidence level">
+                        Evidence: ${escapeHtml(claim.evidence)}
+                      </span>
+                      <span class="tag-small ${getProvenanceBadgeClass(claim.provenance)}" title="Source provenance">
+                        ${escapeHtml(getProvenanceLabel(claim.provenance))}
+                      </span>
+                    </div>
+                    <p class="claim-text">${escapeHtml(claim.text)}</p>
+                  </div>
+                `;
+              }).join("")}
+            </div>
+          </article>
+        `;
+      });
+
+      // Key Takeaways & Product Design Impact
+      html += `
+        <div class="insight-grid animate-in" style="animation-delay: 240ms;">
+          <section class="insight-box focus-dimmable" aria-labelledby="takeaways-title">
+            <div class="tag-row">
+              <span class="chip chip-moderate">Key Takeaways</span>
+            </div>
+            <h3 id="takeaways-title" style="margin-bottom: var(--space-3);">What to remember</h3>
+            <ul>
+              ${sec.takeaways.map(t => `<li>${escapeHtml(t)}</li>`).join("")}
+            </ul>
+          </section>
+
+          <section class="insight-box focus-dimmable" aria-labelledby="app-meaning-title">
+            <div class="tag-row">
+              <span class="chip chip-strong">Product &amp; UX Implications</span>
+            </div>
+            <h3 id="app-meaning-title" style="margin-bottom: var(--space-3);">How we design for this</h3>
+            <ul>
+              ${sec.appMeaning.map(m => `<li>${escapeHtml(m)}</li>`).join("")}
+            </ul>
+          </section>
+        </div>
+      `;
+
+      // Quick Reflection / Quiz + Shared/Local Note
+      const existingNote = state.notes[sec.id] || "";
+      html += `
+        <section class="reflection-card focus-dimmable animate-in" style="animation-delay: 280ms;" aria-labelledby="reflection-title">
+          <div class="tag-row">
+            <span class="chip chip-experience">Quick Concept Check &amp; Notes</span>
+          </div>
+          <h2 id="reflection-title" style="margin-bottom: var(--space-2);">Pause &amp; Reflect (No pressure, no scores)</h2>
+          <p style="color: var(--color-text-muted); font-size: calc(15px * var(--font-scale));">
+            Tap an answer to test the core concept, or jot down a quick note in your browser.
+          </p>
+
+          ${sec.reflections.map((ref, qIdx) => {
+            const answerKey = `${sec.id}_${qIdx}`;
+            const chosen = state.quizAnswers[answerKey];
+            const hasAnswered = chosen !== undefined;
+            return `
+              <div style="margin-bottom: var(--space-4);">
+                <p style="font-weight: 500; margin-bottom: var(--space-2);">${qIdx + 1}. ${escapeHtml(ref.q)}</p>
+                ${ref.options.map((opt, oIdx) => {
+                  let btnClass = "quiz-option";
+                  if (hasAnswered && chosen === oIdx) {
+                    btnClass += (oIdx === ref.correctIndex) ? " selected-correct" : " selected-gentle";
+                  }
+                  return `
+                    <button type="button" class="${btnClass}" onclick="answerQuiz('${sec.id}', ${qIdx}, ${oIdx})">
+                      ${escapeHtml(opt)}
+                    </button>
+                  `;
+                }).join("")}
+                <div class="quiz-feedback" style="display: ${hasAnswered ? 'block' : 'none'};">
+                  ${hasAnswered ? (chosen === ref.correctIndex ? "✓ " + escapeHtml(ref.explanation) : "Not quite — " + escapeHtml(ref.explanation)) : ""}
+                </div>
+              </div>
+            `;
+          }).join("")}
+
+          <div style="margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--color-border);">
+            <label for="section-note-input" style="font-weight: 500; display:block;">
+              Notes for ${escapeHtml(sec.number)}:
+            </label>
+            <span style="font-size: calc(13.5px * var(--font-scale)); color: var(--color-text-muted);">
+              ${escapeHtml(sec.notePrompt)}
+            </span>
+            <textarea
+              id="section-note-input"
+              class="notes-textarea"
+              placeholder="Write a quick thought or review note here... it saves automatically in your browser."
+              oninput="saveSectionNote('${sec.id}', this.value)"
+            >${escapeHtml(existingNote)}</textarea>
+            <div id="note-save-indicator" style="font-size: 12px; color: var(--color-text-muted); margin-top: 4px;">
+              Saved locally on this device.
+            </div>
+          </div>
+        </section>
+
+        <!-- Mark as Done + Gentle Reward -->
+        <section class="card focus-dimmable" style="text-align: center;" aria-live="polite">
+          <h3 style="margin-bottom: var(--space-2);">
+            ${isDone ? "You've finished this module." : "Ready to wrap up this module?"}
+          </h3>
+          <p style="margin: 0 auto var(--space-4); color: var(--color-text-muted); font-size: calc(15px * var(--font-scale));">
+            ${isDone
+              ? "Nice, steady progress. Take a breath, stretch your shoulders, or move to the next piece whenever you feel like it."
+              : "No streaks or flashy confetti—just a quiet check so you know where you left off."}
+          </p>
+          <button
+            type="button"
+            class="btn ${isDone ? 'btn-success' : 'btn-primary'}"
+            onclick="toggleSectionDone('${sec.id}')"
+          >
+            ${isDone ? "✓ Marked as done (Tap to undo)" : "Mark section as done"}
+          </button>
+        </section>
+
+        <!-- Previous / Next Navigation -->
+        <nav class="section-footer-nav" aria-label="Section pagination">
+          <button
+            type="button"
+            class="btn"
+            ${idx === 0 ? "disabled" : ""}
+            onclick="openSection(${idx - 1})"
+          >
+            ← Previous: ${idx > 0 ? escapeHtml(REPORT_DATA[idx - 1].number) : "None"}
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-primary"
+            ${idx === REPORT_DATA.length - 1 ? "disabled" : ""}
+            onclick="openSection(${idx + 1})"
+          >
+            Next: ${idx < REPORT_DATA.length - 1 ? escapeHtml(REPORT_DATA[idx + 1].number) : "Finished"} →
+          </button>
+        </nav>
+      `;
+
+      const view = document.getElementById("app-view");
+      view.innerHTML = html;
+      attachFocusModeListeners();
+    }
+
+    function renderBookmarksView() {
+      const savedSections = REPORT_DATA.filter(s => state.bookmarkedSections[s.id]);
+      const savedClaims = [];
+      REPORT_DATA.forEach((sec, sIdx) => {
+        sec.cards.forEach(card => {
+          card.claims.forEach(claim => {
+            if (state.bookmarkedClaims[claim.id]) {
+              savedClaims.push({ claim, sectionTitle: sec.title, sectionNumber: sec.number, sectionIndex: sIdx });
+            }
+          });
+        });
+      });
+
+      const notesEntries = REPORT_DATA.filter(s => state.notes[s.id] && state.notes[s.id].trim().length > 0);
+      const generalNote = state.notes["general"] || "";
+
+      let html = `
+        <header class="card focus-dimmable animate-in">
+          <div class="tag-row">
+            <span class="chip chip-moderate">Saved &amp; Research Notes</span>
+            <span class="tag-small tag-docs">100% Stored in Local Browser</span>
+          </div>
+          <h1 style="margin-bottom: var(--space-2);">Saved Claims &amp; Reading Notes</h1>
+          <p style="color: var(--color-text-muted); margin-bottom:0;">
+            Everything starred or written down while reading stays privately in this browser.
+          </p>
+        </header>
+
+        <!-- General Scratchpad -->
+        <section class="card focus-dimmable animate-in" style="animation-delay: 50ms;">
+          <h2 style="margin-bottom: var(--space-2);">General Research Scratchpad</h2>
+          <p style="color: var(--color-text-muted); font-size: calc(14.5px * var(--font-scale));">
+            Use this space for overall product ideas, discussion questions, or usability testing notes.
+          </p>
+          <textarea
+            class="notes-textarea"
+            placeholder="Type any general notes here..."
+            oninput="saveSectionNote('general', this.value)"
+          >${escapeHtml(generalNote)}</textarea>
+        </section>
+
+        <!-- Section Notes -->
+        <section class="card focus-dimmable">
+          <h2 style="margin-bottom: var(--space-3);">Notes by Section (${notesEntries.length})</h2>
+          ${notesEntries.length === 0 ? `
+            <p style="color: var(--color-text-muted); margin:0;">You haven't written any section notes yet. You can add them at the bottom of any section.</p>
+          ` : notesEntries.map(sec => {
+            const sIdx = REPORT_DATA.findIndex(s => s.id === sec.id);
+            return `
+              <div class="claim-item">
+                <div class="claim-header">
+                  <strong>${escapeHtml(sec.number)}: ${escapeHtml(sec.title)}</strong>
+                  <button type="button" class="btn btn-icon" onclick="openSection(${sIdx})">Open section →</button>
+                </div>
+                <p style="white-space: pre-wrap; margin:0;">${escapeHtml(state.notes[sec.id])}</p>
+              </div>
+            `;
+          }).join("")}
+        </section>
+
+        <!-- Saved Claims -->
+        <section class="card focus-dimmable">
+          <h2 style="margin-bottom: var(--space-3);">Saved Claims (${savedClaims.length})</h2>
+          ${savedClaims.length === 0 ? `
+            <p style="color: var(--color-text-muted); margin:0;">No individual claims saved yet. Tap "☆ Save claim" on any detail card while reading.</p>
+          ` : savedClaims.map(item => `
+            <div class="claim-item">
+              <div class="claim-header">
+                <h3 class="claim-title">${escapeHtml(item.claim.title)}</h3>
+                <div style="display:flex; gap: 8px;">
+                  <button type="button" class="btn btn-icon" style="padding: 4px 10px; font-size: 12px;" onclick="openSection(${item.sectionIndex})">
+                    Go to ${escapeHtml(item.sectionNumber)}
+                  </button>
+                  <button type="button" class="btn btn-icon" style="padding: 4px 10px; font-size: 12px;" onclick="toggleBookmarkClaim('${item.claim.id}')">
+                    Remove
+                  </button>
+                </div>
+              </div>
+              <div class="tag-row">
+                <span class="chip ${getEvidenceBadgeClass(item.claim.evidence)}">Evidence: ${escapeHtml(item.claim.evidence)}</span>
+                <span class="tag-small ${getProvenanceBadgeClass(item.claim.provenance)}">${escapeHtml(getProvenanceLabel(item.claim.provenance))}</span>
+              </div>
+              <p class="claim-text">${escapeHtml(item.claim.text)}</p>
+            </div>
+          `).join("")}
+        </section>
+
+        <!-- Saved Sections -->
+        <section class="card focus-dimmable">
+          <h2 style="margin-bottom: var(--space-3);">Saved Sections (${savedSections.length})</h2>
+          ${savedSections.length === 0 ? `
+            <p style="color: var(--color-text-muted); margin:0;">No full sections bookmarked yet.</p>
+          ` : savedSections.map(sec => {
+            const sIdx = REPORT_DATA.findIndex(s => s.id === sec.id);
+            return `
+              <div class="claim-item" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap: 12px;">
+                <div>
+                  <strong>${escapeHtml(sec.number)}: ${escapeHtml(sec.title)}</strong>
+                  <div style="font-size: 14px; color: var(--color-text-muted);">${escapeHtml(sec.readTime)}</div>
+                </div>
+                <div style="display:flex; gap: 8px;">
+                  <button type="button" class="btn btn-primary btn-icon" onclick="openSection(${sIdx})">Read →</button>
+                  <button type="button" class="btn btn-icon" onclick="toggleBookmarkSection('${sec.id}')">Remove</button>
+                </div>
+              </div>
+            `;
+          }).join("")}
+        </section>
+      `;
+
+      document.getElementById("app-view").innerHTML = html;
+      attachFocusModeListeners();
+    }
+
+    function renderSourcesView() {
+      let html = `
+        <header class="card focus-dimmable animate-in">
+          <div class="tag-row">
+            <span class="chip chip-strong">Master Provenance Table</span>
+            <span class="tag-small tag-both">Project Documents + 2024–2026 External Research</span>
+          </div>
+          <h1 style="margin-bottom: var(--space-2);">Sources &amp; Evidence Mapping</h1>
+          <p style="color: var(--color-text-muted); margin-bottom:0;">
+            Every claim in this companion comes strictly from the project research documents or verified external behavioral, technical, and legal sources. Nothing is invented.
+          </p>
+        </header>
+      `;
+
+      SOURCES_DATA.forEach((src, idx) => {
+        const delayMs = 40 + idx * 30;
+        html += `
+          <article class="card focus-dimmable animate-in" style="animation-delay: ${delayMs}ms;">
+            <div class="tag-row">
+              <span class="chip ${getEvidenceBadgeClass(src.evidence)}">Highest Evidence: ${escapeHtml(src.evidence)}</span>
+              <span class="tag-small ${getProvenanceBadgeClass(src.type)}">${escapeHtml(src.type)}</span>
+            </div>
+            <h2 style="font-size: calc(19px * var(--font-scale)); margin-bottom: var(--space-2);">${escapeHtml(src.title)}</h2>
+            <p style="margin:0; color: var(--color-text-muted);">${escapeHtml(src.summary)}</p>
+          </article>
+        `;
+      });
+
+      document.getElementById("app-view").innerHTML = html;
+      attachFocusModeListeners();
+    }
+
+    function renderSearchResults(query) {
+      const q = query.trim().toLowerCase();
+      if (!q) {
+        renderCurrentView();
+        return;
+      }
+
+      const matches = [];
+      REPORT_DATA.forEach((sec, sIdx) => {
+        // Check section title / summary
+        const secMatch =
+          sec.title.toLowerCase().includes(q) ||
+          sec.subtitle.toLowerCase().includes(q) ||
+          sec.threeLineSummary.some(l => l.toLowerCase().includes(q));
+
+        const matchingClaims = [];
+        sec.cards.forEach(card => {
+          card.claims.forEach(claim => {
+            if (
+              claim.title.toLowerCase().includes(q) ||
+              claim.text.toLowerCase().includes(q) ||
+              claim.evidence.toLowerCase().includes(q) ||
+              claim.provenance.toLowerCase().includes(q)
+            ) {
+              matchingClaims.push({ claim, cardTitle: card.title });
+            }
+          });
+        });
+
+        if (secMatch || matchingClaims.length > 0) {
+          matches.push({ sec, sIdx, matchingClaims });
+        }
+      });
+
+      let html = `
+        <header class="card">
+          <div class="tag-row">
+            <span class="chip chip-moderate">Search Results</span>
+          </div>
+          <h1 style="font-size: calc(24px * var(--font-scale)); margin-bottom: var(--space-2);">
+            Found ${matches.length} matching section(s) for "${escapeHtml(query)}"
+          </h1>
+          <button type="button" class="btn btn-icon" onclick="clearSearch()">← Clear search</button>
+        </header>
+      `;
+
+      if (matches.length === 0) {
+        html += `
+          <div class="card">
+            <p style="margin:0;">No matches found. Try simpler words like <strong>dopamine</strong>, <strong>Android</strong>, <strong>DPDP</strong>, <strong>Maya</strong>, or <strong>bridge</strong>.</p>
+          </div>
+        `;
+      } else {
+        matches.forEach(m => {
+          html += `
+            <section class="card">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap: 8px; margin-bottom: var(--space-3);">
+                <div>
+                  <span class="chip chip-weak">${escapeHtml(m.sec.number)}</span>
+                  <h2 style="margin: 6px 0 0;">${escapeHtml(m.sec.title)}</h2>
+                </div>
+                <button type="button" class="btn btn-primary btn-icon" onclick="clearSearchAndOpenSection(${m.sIdx})">
+                  Open ${escapeHtml(m.sec.number)} →
+                </button>
+              </div>
+              ${m.matchingClaims.map(mc => `
+                <div class="claim-item">
+                  <div class="tag-row">
+                    <span class="chip ${getEvidenceBadgeClass(mc.claim.evidence)}">Evidence: ${escapeHtml(mc.claim.evidence)}</span>
+                    <span class="tag-small ${getProvenanceBadgeClass(mc.claim.provenance)}">${escapeHtml(getProvenanceLabel(mc.claim.provenance))}</span>
+                  </div>
+                  <h3 class="claim-title" style="margin-bottom: 4px;">${escapeHtml(mc.claim.title)}</h3>
+                  <p class="claim-text">${escapeHtml(mc.claim.text)}</p>
+                </div>
+              `).join("")}
+            </section>
+          `;
+        });
+      }
+
+      document.getElementById("app-view").innerHTML = html;
+    }
+
+    function renderCurrentView() {
+      updateTopChrome();
+      if (state.currentView === "home") {
+        renderHomeView();
+      } else if (state.currentView === "section") {
+        renderSectionView();
+      } else if (state.currentView === "bookmarks") {
+        renderBookmarksView();
+      } else if (state.currentView === "sources") {
+        renderSourcesView();
+      }
+    }
+
+    window.navigateView = function(viewName) {
+      state.currentView = viewName;
+      saveState();
+      clearSearchInputOnly();
+      renderCurrentView();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
+    window.openSection = function(index) {
+      if (index < 0 || index >= REPORT_DATA.length) return;
+      state.currentSectionIndex = index;
+      state.currentView = "section";
+      saveState();
+      clearSearchInputOnly();
+      renderCurrentView();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
+    window.toggleCollapseCard = function(cardId) {
+      const cardEl = document.getElementById("card-" + cardId);
+      if (!cardEl) return;
+      const isOpen = cardEl.getAttribute("data-open") === "true";
+      const nextState = !isOpen;
+      cardEl.setAttribute("data-open", nextState ? "true" : "false");
+      const btn = cardEl.querySelector(".collapse-header");
+      if (btn) btn.setAttribute("aria-expanded", nextState ? "true" : "false");
+    };
+
+    window.toggleAllCardsInSection = function(openState) {
+      document.querySelectorAll(".collapse-card").forEach(cardEl => {
+        cardEl.setAttribute("data-open", openState ? "true" : "false");
+        const btn = cardEl.querySelector(".collapse-header");
+        if (btn) btn.setAttribute("aria-expanded", openState ? "true" : "false");
+      });
+    };
+
+    window.toggleSectionDone = function(secId) {
+      state.completedSections[secId] = !state.completedSections[secId];
+      saveState();
+      renderCurrentView();
+    };
+
+    window.toggleBookmarkSection = function(secId) {
+      state.bookmarkedSections[secId] = !state.bookmarkedSections[secId];
+      saveState();
+      renderCurrentView();
+    };
+
+    window.toggleBookmarkClaim = function(claimId) {
+      state.bookmarkedClaims[claimId] = !state.bookmarkedClaims[claimId];
+      saveState();
+      if (state.currentView === "bookmarks") {
+        renderBookmarksView();
+      } else {
+        // Update button in place so open cards don't collapse
+        const claimEl = document.getElementById("claim-" + claimId);
+        if (claimEl) {
+          const btn = claimEl.querySelector("button");
+          const isSaved = !!state.bookmarkedClaims[claimId];
+          if (btn) {
+            btn.className = "btn btn-icon " + (isSaved ? "btn-active" : "");
+            btn.textContent = isSaved ? "★ Saved" : "☆ Save claim";
+          }
+        }
+      }
+    };
+
+    window.answerQuiz = function(secId, qIdx, optionIdx) {
+      state.quizAnswers[`${secId}_${qIdx}`] = optionIdx;
+      saveState();
+      // Re-render section while preserving open cards
+      const openCardIds = Array.from(document.querySelectorAll('.collapse-card[data-open="true"]')).map(el => el.id);
+      renderSectionView();
+      openCardIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.setAttribute("data-open", "true");
+          el.querySelector(".collapse-header")?.setAttribute("aria-expanded", "true");
+        }
+      });
+    };
+
+    window.saveSectionNote = function(secId, text) {
+      state.notes[secId] = text;
+      saveState();
+      const ind = document.getElementById("note-save-indicator");
+      if (ind) {
+        ind.textContent = "Saved just now ✓";
+      }
+    };
+
+    function clearSearchInputOnly() {
+      const input = document.getElementById("search-input");
+      const clearBtn = document.getElementById("search-clear");
+      if (input) input.value = "";
+      if (clearBtn) clearBtn.style.display = "none";
+    }
+
+    window.clearSearch = function() {
+      clearSearchInputOnly();
+      renderCurrentView();
+    };
+
+    window.clearSearchAndOpenSection = function(idx) {
+      clearSearchInputOnly();
+      openSection(idx);
+    };
+
+    function attachFocusModeListeners() {
+      document.querySelectorAll(".focus-dimmable").forEach(el => {
+        el.addEventListener("click", function() {
+          document.querySelectorAll(".focus-dimmable.active-focus-target").forEach(prev => {
+            prev.classList.remove("active-focus-target");
+          });
+          this.classList.add("active-focus-target");
+        });
+      });
+    }
+
+    // Initialize controls on load
+    document.addEventListener("DOMContentLoaded", () => {
+      applyPreferences();
+      renderCurrentView();
+
+      document.getElementById("btn-home-brand").addEventListener("click", () => navigateView("home"));
+      document.getElementById("nav-home").addEventListener("click", () => navigateView("home"));
+      document.getElementById("nav-bookmarks").addEventListener("click", () => navigateView("bookmarks"));
+      document.getElementById("nav-sources").addEventListener("click", () => navigateView("sources"));
+
+      document.getElementById("btn-theme").addEventListener("click", () => {
+        state.theme = state.theme === "dark" ? "light" : "dark";
+        applyPreferences();
+        saveState();
+      });
+
+      document.getElementById("btn-text-size").addEventListener("click", () => {
+        const order = ["small", "medium", "large", "xlarge"];
+        const nextIdx = (order.indexOf(state.textSize) + 1) % order.length;
+        state.textSize = order[nextIdx];
+        applyPreferences();
+        saveState();
+      });
+
+      document.getElementById("btn-focus-mode").addEventListener("click", () => {
+        state.focusMode = !state.focusMode;
+        applyPreferences();
+        saveState();
+      });
+
+      const searchInput = document.getElementById("search-input");
+      const searchClear = document.getElementById("search-clear");
+      searchInput.addEventListener("input", (e) => {
+        const val = e.target.value;
+        searchClear.style.display = val.length > 0 ? "block" : "none";
+        renderSearchResults(val);
+      });
+      searchClear.addEventListener("click", () => window.clearSearch());
+
+      // Keyboard navigation (Left / Right arrows when reading a section and not typing in an input)
+      document.addEventListener("keydown", (e) => {
+        const tag = (document.activeElement && document.activeElement.tagName) || "";
+        if (tag === "INPUT" || tag === "TEXTAREA") return;
+        if (state.currentView === "section") {
+          if (e.key === "ArrowRight" && state.currentSectionIndex < REPORT_DATA.length - 1) {
+            openSection(state.currentSectionIndex + 1);
+          } else if (e.key === "ArrowLeft" && state.currentSectionIndex > 0) {
+            openSection(state.currentSectionIndex - 1);
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>
